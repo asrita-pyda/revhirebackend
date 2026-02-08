@@ -1,7 +1,7 @@
 package org.example.revhire.model;
 
 import jakarta.persistence.*;
-import org.apache.catalina.User;
+import org.example.revhire.model.User;
 import org.example.revhire.enums.JobStatus;
 import org.example.revhire.enums.JobType;
 
