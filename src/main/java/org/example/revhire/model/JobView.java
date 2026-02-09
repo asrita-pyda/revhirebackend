@@ -1,13 +1,9 @@
 package org.example.revhire.model;
 
 import jakarta.persistence.*;
-import org.example.revhire.model.User;
-import org.example.revhire.enums.JobStatus;
-import org.example.revhire.enums.JobType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+
 @Entity
 @Table(name = "job_views")
 public class JobView {
@@ -26,6 +22,16 @@ public class JobView {
 
     private LocalDateTime viewedAt = LocalDateTime.now();
 
+    public JobView(){
+
+    }
+
+    public JobView(Long id, Job job, User user, LocalDateTime viewedAt) {
+        this.id = id;
+        this.job = job;
+        this.user = user;
+        this.viewedAt = viewedAt;
+    }
 
 
     public Long getId() {

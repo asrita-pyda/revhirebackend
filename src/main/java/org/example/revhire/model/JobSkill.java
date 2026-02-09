@@ -1,13 +1,7 @@
 package org.example.revhire.model;
 
 import jakarta.persistence.*;
-import org.example.revhire.model.User;
-import org.example.revhire.enums.JobStatus;
-import org.example.revhire.enums.JobType;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 @Entity
 @Table(name="job_skills")
 public class JobSkill {
@@ -21,7 +15,14 @@ public class JobSkill {
 
     private String skill;
 
+    public JobSkill(){
 
+    }
+    public JobSkill(Long id, Job job, String skill) {
+        this.id = id;
+        this.job = job;
+        this.skill = skill;
+    }
 
     public Long getId() {
         return id;

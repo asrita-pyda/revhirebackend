@@ -1,6 +1,6 @@
 package org.example.revhire.model;
 import jakarta.persistence.*;
-import org.example.revhire.model.User;
+
 @Entity
 @Table(name = "resume_experience")
 public class ResumeExperience {

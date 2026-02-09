@@ -25,6 +25,18 @@ public class Employer {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Employer(){}
+
+    public Employer(Integer userId, String companyName, String industry, String companySize, String description, String website, String location, User user) {
+        this.userId = userId;
+        this.companyName = companyName;
+        this.industry = industry;
+        this.companySize = companySize;
+        this.description = description;
+        this.website = website;
+        this.location = location;
+        this.user = user;
+    }
 
     public Integer getUserId() { return userId; }
     public void setUserId(Integer userId) { this.userId = userId; }
