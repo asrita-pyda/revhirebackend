@@ -39,6 +39,10 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Employer employer;
 
+    public User(Integer id) {
+        this.id = id;
+    }
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private JobSeeker jobSeeker;
 
@@ -48,6 +52,24 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
+
+    public User(){}
+
+    public User(Integer id, String name, String email, String password, Role role, String phone, String location, String securityQuestion, String securityAnswer, Boolean isActive, LocalDateTime createdAt, Employer employer, JobSeeker jobSeeker) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.phone = phone;
+        this.location = location;
+        this.securityQuestion = securityQuestion;
+        this.securityAnswer = securityAnswer;
+        this.isActive = isActive;
+        this.createdAt = createdAt;
+        this.employer = employer;
+        this.jobSeeker = jobSeeker;
+    }
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }

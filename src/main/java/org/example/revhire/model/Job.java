@@ -1,8 +1,7 @@
 package org.example.revhire.model;
 
 import jakarta.persistence.*;
-import org.example.revhire.model.User;
-import org.example.revhire.enums.JobStatus;
+ import org.example.revhire.enums.JobStatus;
 import org.example.revhire.enums.JobType;
 
 import java.time.LocalDate;
@@ -56,6 +55,31 @@ public class Job {
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobView> jobViews;
+
+    public Job(Long id, User employer, String title, String description, String requirements, String skillsRequired, String location, Integer salaryMin, Integer salaryMax, JobType jobType, Integer experienceYears, Integer openings, LocalDate deadline, JobStatus status, LocalDateTime postedAt, List<JobSkill> jobSkills, List<JobView> jobViews) {
+        this.id = id;
+        this.employer = employer;
+        this.title = title;
+        this.description = description;
+        this.requirements = requirements;
+        this.skillsRequired = skillsRequired;
+        this.location = location;
+        this.salaryMin = salaryMin;
+        this.salaryMax = salaryMax;
+        this.jobType = jobType;
+        this.experienceYears = experienceYears;
+        this.openings = openings;
+        this.deadline = deadline;
+        this.status = status;
+        this.postedAt = postedAt;
+        this.jobSkills = jobSkills;
+        this.jobViews = jobViews;
+    }
+
+    public Job(){
+
+    }
+
 
 
 
