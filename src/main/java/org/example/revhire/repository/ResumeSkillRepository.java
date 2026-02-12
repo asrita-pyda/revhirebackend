@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ResumeSkillRepository extends JpaRepository<ResumeSkills, Integer> {
-    List<ResumeSkills> findByUser_Id(Integer userId);
+    List<ResumeSkills> findByUserId(Integer userId);
 }

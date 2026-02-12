@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface JobRepository extends JpaRepository<Job, Integer> {
+public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findByTitleContaining(String title);
 
     List<Job> findByLocationContaining(String location);

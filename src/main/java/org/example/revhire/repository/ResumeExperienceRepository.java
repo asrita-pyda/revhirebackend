@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ResumeExperienceRepository extends JpaRepository<ResumeExperience, Integer> {
-    List<ResumeExperience> findByUser_Id(Integer userId);
+    List<ResumeExperience> findByUserId(Integer userId);
 }

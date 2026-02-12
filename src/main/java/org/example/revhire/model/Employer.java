@@ -20,7 +20,7 @@ public class Employer {
     private String location;
 
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;

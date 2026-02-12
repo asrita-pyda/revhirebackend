@@ -1,5 +1,4 @@
 package org.example.revhire.model;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -8,26 +7,25 @@ public class EmployerStats {
 
     @Id
     @Column(name = "employer_id")
-    private int employerId;
+    private Integer employerId;
 
     @Column(name = "total_jobs")
-    private int totalJobs;
+    private Integer totalJobs;
 
     @Column(name = "active_jobs")
-    private int activeJobs;
+    private Integer activeJobs;
 
     @Column(name = "total_applications")
-    private int totalApplications;
+    private Integer totalApplications;
 
     @Column(name = "pending_reviews")
-    private int pendingReviews;
-
+    private Integer pendingReviews;
 
     public EmployerStats() {
     }
 
-    public EmployerStats(int employerId, int totalJobs, int activeJobs,
-                         int totalApplications, int pendingReviews) {
+    public EmployerStats(Integer employerId, Integer totalJobs, Integer activeJobs,
+                         Integer totalApplications, Integer pendingReviews) {
         this.employerId = employerId;
         this.totalJobs = totalJobs;
         this.activeJobs = activeJobs;
@@ -35,44 +33,43 @@ public class EmployerStats {
         this.pendingReviews = pendingReviews;
     }
 
-    public int getEmployerId() {
+    public Integer getEmployerId() {
         return employerId;
     }
 
-    public void setEmployerId(int employerId) {
+    public void setEmployerId(Integer employerId) {
         this.employerId = employerId;
     }
 
-    public int getTotalJobs() {
+    public Integer getTotalJobs() {
         return totalJobs;
     }
 
-    public void setTotalJobs(int totalJobs) {
+    public void setTotalJobs(Integer totalJobs) {
         this.totalJobs = totalJobs;
     }
 
-    public int getActiveJobs() {
+    public Integer getActiveJobs() {
         return activeJobs;
     }
 
-    public void setActiveJobs(int activeJobs) {
+    public void setActiveJobs(Integer activeJobs) {
         this.activeJobs = activeJobs;
     }
 
-    public int getTotalApplications() {
+    public Integer getTotalApplications() {
         return totalApplications;
     }
 
-    public void setTotalApplications(int totalApplications) {
+    public void setTotalApplications(Integer totalApplications) {
         this.totalApplications = totalApplications;
     }
 
-    public int getPendingReviews() {
+    public Integer getPendingReviews() {
         return pendingReviews;
     }
 
-    public void setPendingReviews(int pendingReviews) {
+    public void setPendingReviews(Integer pendingReviews) {
         this.pendingReviews = pendingReviews;
     }
 }
-

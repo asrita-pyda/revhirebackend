@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ApplicationStatusHistoryRepository extends JpaRepository<ApplicationStatusHistory, Integer> {
-    List<ApplicationStatusHistory> findByApplication_Id(Integer applicationId);
+    List<ApplicationStatusHistory> findByApplicationId(Long applicationId);
 }

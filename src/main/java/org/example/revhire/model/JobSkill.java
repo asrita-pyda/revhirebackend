@@ -7,9 +7,9 @@ import jakarta.persistence.*;
 public class JobSkill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 
@@ -18,17 +18,17 @@ public class JobSkill {
     public JobSkill(){
 
     }
-    public JobSkill(Long id, Job job, String skill) {
+    public JobSkill(Integer id, Job job, String skill) {
         this.id = id;
         this.job = job;
         this.skill = skill;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
