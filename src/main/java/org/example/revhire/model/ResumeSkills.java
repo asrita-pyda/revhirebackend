@@ -7,7 +7,7 @@ public class ResumeSkills {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -19,17 +19,17 @@ public class ResumeSkills {
     public ResumeSkills() {
     }
 
-    public ResumeSkills(Long id, User user, String skillName) {
+    public ResumeSkills(Integer id, User user, String skillName) {
         this.id = id;
         this.user = user;
         this.skillName = skillName;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

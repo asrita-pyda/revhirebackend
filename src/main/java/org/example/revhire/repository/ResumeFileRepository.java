@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ResumeFileRepository extends JpaRepository<ResumeFiles, Integer> {
-    List<ResumeFiles> findByUser_Id(Integer userId);
+public interface ResumeFileRepository extends JpaRepository<ResumeFiles, Long> {
+    List<ResumeFiles> findByUserId(Integer userId);
 }

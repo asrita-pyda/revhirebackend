@@ -7,7 +7,7 @@ public class ResumeCertifications {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -24,7 +24,7 @@ public class ResumeCertifications {
     public ResumeCertifications() {
     }
 
-    public ResumeCertifications(Long id, User user, String certificateName, String organization, Integer year) {
+    public ResumeCertifications(Integer id, User user, String certificateName, String organization, Integer year) {
         this.id = id;
         this.user = user;
         this.certificateName = certificateName;
@@ -32,12 +32,12 @@ public class ResumeCertifications {
         this.year = year;
     }
 
-    public Long getId(){
+    public Integer getId(){
 
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

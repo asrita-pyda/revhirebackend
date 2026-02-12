@@ -9,52 +9,43 @@ public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private int userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(columnDefinition = "TEXT")
     private String message;
-
-    @Column(length = 50)
     private String type;
-
-    @Column(name = "is_read")
-    private boolean isRead = false;
-
-    @Column(name = "created_at")
+    private boolean isRead;
     private Timestamp createdAt;
-
 
     public Notification() {
     }
 
-
-    public Notification(int id, int userId, String message, String type,
-                        boolean isRead, Timestamp createdAt) {
+    public Notification(Long id, User user, String message, String type, boolean isRead, Timestamp createdAt) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.message = message;
         this.type = type;
         this.isRead = isRead;
         this.createdAt = createdAt;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getMessage() {
@@ -81,6 +72,10 @@ public class Notification {
         isRead = read;
     }
 
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
+    }
+
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -89,4 +84,3 @@ public class Notification {
         this.createdAt = createdAt;
     }
 }
-

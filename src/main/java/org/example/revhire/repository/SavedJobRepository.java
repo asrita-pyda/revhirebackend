@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SavedJobRepository extends JpaRepository<SavedJob, Integer> {
-    List<SavedJob> findByUser_Id(Integer userId);
+public interface SavedJobRepository extends JpaRepository<SavedJob, Long> {
+    List<SavedJob> findByUserId(Integer userId);
 
-    Optional<SavedJob> findByUser_IdAndJob_Id(Integer userId, Integer jobId);
+    Optional<SavedJob> findByUserIdAndJobId(Integer userId, Long jobId);
 
-    boolean existsByUser_IdAndJob_Id(Integer userId, Integer jobId);
+    boolean existsByUserIdAndJobId(Integer userId, Long jobId);
 }

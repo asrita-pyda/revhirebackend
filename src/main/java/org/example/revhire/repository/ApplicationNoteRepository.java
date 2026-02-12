@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ApplicationNoteRepository extends JpaRepository<ApplicationNotes, Integer> {
-    List<ApplicationNotes> findByApplication_Id(Integer applicationId);
+    List<ApplicationNotes> findByApplicationId(Long applicationId);
 }

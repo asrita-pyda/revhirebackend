@@ -9,16 +9,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ApplicationRepository extends JpaRepository<Applications, Integer> {
-    List<Applications> findBySeeker_Id(Integer seekerId);
+public interface ApplicationRepository extends JpaRepository<Applications, Long> {
 
-    List<Applications> findByJob_Id(Integer jobId);
+    List<Applications> findBySeekerId(Integer seekerId);
+
+    List<Applications> findByJobId(Long jobId);
 
     Long countByJobEmployerId(Integer employerId);
 
     Long countByJobEmployerIdAndAppliedAtAfter(Integer employerId, LocalDateTime date);
 
-    Optional<Applications> findByJob_IdAndSeeker_Id(Integer jobId, Integer seekerId);
+    Optional<Applications> findByJobIdAndSeekerId(Long jobId, Integer seekerId);
 
-    boolean existsByJob_IdAndSeeker_Id(Integer jobId, Integer seekerId);
+    boolean existsByJobIdAndSeekerId(Long jobId, Integer seekerId);
 }

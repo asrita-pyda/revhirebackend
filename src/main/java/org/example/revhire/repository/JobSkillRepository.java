@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface JobSkillRepository extends JpaRepository<JobSkill, Integer> {
-    List<JobSkill> findByJob_Id(Integer jobId);
+    List<JobSkill> findByJobId(Long jobId);
 }
