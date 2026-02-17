@@ -1,13 +1,14 @@
 package org.example.revhire.model;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "employer_stats")
-public class EmployerStats {
+public class EmployerStats extends BaseEntity {
 
     @Id
     @Column(name = "employer_id")
-    private Integer employerId;
+    private Long employerId;
 
     @Column(name = "total_jobs")
     private Integer totalJobs;
@@ -24,7 +25,7 @@ public class EmployerStats {
     public EmployerStats() {
     }
 
-    public EmployerStats(Integer employerId, Integer totalJobs, Integer activeJobs,
+    public EmployerStats(Long employerId, Integer totalJobs, Integer activeJobs,
                          Integer totalApplications, Integer pendingReviews) {
         this.employerId = employerId;
         this.totalJobs = totalJobs;
@@ -33,11 +34,11 @@ public class EmployerStats {
         this.pendingReviews = pendingReviews;
     }
 
-    public Integer getEmployerId() {
+    public Long getEmployerId() {
         return employerId;
     }
 
-    public void setEmployerId(Integer employerId) {
+    public void setEmployerId(Long employerId) {
         this.employerId = employerId;
     }
 

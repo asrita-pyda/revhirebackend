@@ -1,10 +1,11 @@
 package org.example.revhire.model;
 
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "withdrawal_reasons")
-public class WithdrawalReasons {
+public class WithdrawalReasons extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +18,9 @@ public class WithdrawalReasons {
     @Column(columnDefinition = "TEXT")
     private String reason;
 
-
     public WithdrawalReasons() {
 
     }
-
 
     public WithdrawalReasons(Applications application, String reason) {
         this.application = application;

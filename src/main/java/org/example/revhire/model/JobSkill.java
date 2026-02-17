@@ -3,8 +3,8 @@ package org.example.revhire.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="job_skills")
-public class JobSkill {
+@Table(name = "job_skills")
+public class JobSkill extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -15,9 +15,10 @@ public class JobSkill {
 
     private String skill;
 
-    public JobSkill(){
+    public JobSkill() {
 
     }
+
     public JobSkill(Integer id, Job job, String skill) {
         this.id = id;
         this.job = job;

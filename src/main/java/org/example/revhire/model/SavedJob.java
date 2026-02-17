@@ -1,5 +1,7 @@
 package org.example.revhire.model;
 
+
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -7,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "saved_jobs", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "user_id", "job_id" })
 })
-public class SavedJob {
+public class SavedJob extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +23,6 @@ public class SavedJob {
     @JoinColumn(name = "job_id")
     private Job job;
 
-    private LocalDateTime savedAt = LocalDateTime.now();
-
     public SavedJob() {
 
     }
@@ -31,7 +31,6 @@ public class SavedJob {
         this.id = id;
         this.user = user;
         this.job = job;
-        this.savedAt = savedAt;
     }
 
     public Long getId() {
@@ -58,8 +57,7 @@ public class SavedJob {
         this.job = job;
     }
 
-    public LocalDateTime getSavedAt() {
-        return savedAt;
+    public java.time.LocalDateTime getSavedAt() {
+        return getCreatedAt();
     }
 }
-

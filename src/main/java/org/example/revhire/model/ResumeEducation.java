@@ -1,27 +1,22 @@
 package org.example.revhire.model;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "resume_education")
-public class ResumeEducation {
+public class ResumeEducation extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(length = 120)
     private String degree;
-
-    @Column(length = 150)
     private String institution;
-
     private Integer year;
-
-    @Column(length = 10)
     private String cgpa;
 
     public ResumeEducation() {
@@ -84,4 +79,3 @@ public class ResumeEducation {
         this.cgpa = cgpa;
     }
 }
-
