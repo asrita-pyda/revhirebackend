@@ -1,6 +1,5 @@
 package org.example.revhire.model;
 import jakarta.persistence.*;
-import org.example.revhire.User;
 
 import java.time.LocalDateTime;
 

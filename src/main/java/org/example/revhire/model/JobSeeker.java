@@ -18,6 +18,16 @@ public class JobSeeker {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public JobSeeker(){
+
+    }
+
+    public JobSeeker(Integer userId, String currentStatus, Integer totalExperience, User user) {
+        this.userId = userId;
+        this.currentStatus = currentStatus;
+        this.totalExperience = totalExperience;
+        this.user = user;
+    }
 
     public Integer getUserId() { return userId; }
     public void setUserId(Integer userId) { this.userId = userId; }
