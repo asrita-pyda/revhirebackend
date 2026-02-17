@@ -5,12 +5,11 @@ import org.example.revhire.enums.JobStatus;
 import org.example.revhire.enums.JobType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "jobs")
-public class Job {
+public class Job extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,8 +45,6 @@ public class Job {
     @Enumerated(EnumType.STRING)
     private JobStatus status = JobStatus.OPEN;
 
-    private LocalDateTime postedAt = LocalDateTime.now();
-
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobSkill> jobSkills;
 
@@ -56,7 +53,7 @@ public class Job {
 
     public Job(Long id, User employer, String title, String description, String requirements, String skillsRequired,
                String location, Integer salaryMin, Integer salaryMax, JobType jobType, Integer experienceYears,
-               Integer openings, LocalDate deadline, JobStatus status, LocalDateTime postedAt, List<JobSkill> jobSkills,
+               Integer openings, LocalDate deadline, JobStatus status, List<JobSkill> jobSkills,
                List<JobView> jobViews) {
         this.id = id;
         this.employer = employer;
@@ -72,7 +69,6 @@ public class Job {
         this.openings = openings;
         this.deadline = deadline;
         this.status = status;
-        this.postedAt = postedAt;
         this.jobSkills = jobSkills;
         this.jobViews = jobViews;
     }
@@ -197,10 +193,6 @@ public class Job {
         this.status = status;
     }
 
-    public LocalDateTime getPostedAt() {
-        return postedAt;
-    }
-
     public List<JobSkill> getJobSkills() {
         return jobSkills;
     }
@@ -215,5 +207,9 @@ public class Job {
 
     public void setJobViews(List<JobView> jobViews) {
         this.jobViews = jobViews;
+    }
+
+    public java.time.LocalDateTime getPostedAt() {
+        return getCreatedAt();
     }
 }

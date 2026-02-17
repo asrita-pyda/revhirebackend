@@ -1,25 +1,21 @@
 package org.example.revhire.model;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "resume_experience")
-public class ResumeExperience {
+public class ResumeExperience extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(length = 150)
     private String company;
-
-    @Column(length = 120)
-    private String role;
-
-    @Column(length = 60)
+    private String jobTitle;
     private String duration;
 
     @Column(columnDefinition = "TEXT")
@@ -28,11 +24,12 @@ public class ResumeExperience {
     public ResumeExperience() {
     }
 
-    public ResumeExperience(Integer id, User user, String company, String role, String duration, String description) {
+    public ResumeExperience(Integer id, User user, String company, String jobTitle, String duration,
+                            String description) {
         this.id = id;
         this.user = user;
         this.company = company;
-        this.role = role;
+        this.jobTitle = jobTitle;
         this.duration = duration;
         this.description = description;
     }
@@ -61,12 +58,12 @@ public class ResumeExperience {
         this.company = company;
     }
 
-    public String getRole() {
-        return role;
+    public String getJobTitle() {
+        return jobTitle;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
     }
 
     public String getDuration() {
@@ -85,4 +82,3 @@ public class ResumeExperience {
         this.description = description;
     }
 }
-

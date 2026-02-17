@@ -1,11 +1,10 @@
 package org.example.revhire.model;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "notifications")
-public class Notification {
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,18 +17,16 @@ public class Notification {
     private String message;
     private String type;
     private boolean isRead;
-    private Timestamp createdAt;
 
     public Notification() {
     }
 
-    public Notification(Long id, User user, String message, String type, boolean isRead, Timestamp createdAt) {
+    public Notification(Long id, User user, String message, String type, boolean isRead) {
         this.id = id;
         this.user = user;
         this.message = message;
         this.type = type;
         this.isRead = isRead;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -76,11 +73,4 @@ public class Notification {
         this.isRead = isRead;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
 }
