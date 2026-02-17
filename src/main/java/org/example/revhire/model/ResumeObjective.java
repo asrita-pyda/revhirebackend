@@ -1,16 +1,17 @@
 package org.example.revhire.model;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "resume_objective")
-public class ResumeObjective {
+public class ResumeObjective extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(columnDefinition = "TEXT")
@@ -19,17 +20,17 @@ public class ResumeObjective {
     public ResumeObjective() {
     }
 
-    public ResumeObjective(Long id, User user, String objective) {
+    public ResumeObjective(Integer id, User user, String objective) {
         this.id = id;
         this.user = user;
         this.objective = objective;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -49,4 +50,3 @@ public class ResumeObjective {
         this.objective = objective;
     }
 }
-
