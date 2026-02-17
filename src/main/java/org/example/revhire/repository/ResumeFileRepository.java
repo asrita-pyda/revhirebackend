@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ResumeFileRepository extends JpaRepository<ResumeFiles, Long> {
-    List<ResumeFiles> findByUserId(Integer userId);
+    List<ResumeFiles> findByUserId(Long userId);
 }
