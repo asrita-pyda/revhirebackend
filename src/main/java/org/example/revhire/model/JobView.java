@@ -6,23 +6,21 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "job_views")
-public class JobView {
+public class JobView extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    private LocalDateTime viewedAt = LocalDateTime.now();
-
-    public JobView(){
+    public JobView() {
 
     }
 
@@ -30,9 +28,7 @@ public class JobView {
         this.id = id;
         this.job = job;
         this.user = user;
-        this.viewedAt = viewedAt;
     }
-
 
     public Long getId() {
         return id;
@@ -58,7 +54,4 @@ public class JobView {
         this.user = user;
     }
 
-    public LocalDateTime getViewedAt() {
-        return viewedAt;
-    }
 }
