@@ -3,17 +3,17 @@ package org.example.revhire.dto.response;
 public class ResumeExperienceResponse {
     private Integer id;
     private String company;
-    private String role;
+    private String jobTitle;
     private String duration;
     private String description;
 
     public ResumeExperienceResponse() {
     }
 
-    public ResumeExperienceResponse(Integer id, String company, String role, String duration, String description) {
+    public ResumeExperienceResponse(Integer id, String company, String jobTitle, String duration, String description) {
         this.id = id;
         this.company = company;
-        this.role = role;
+        this.jobTitle = jobTitle;
         this.duration = duration;
         this.description = description;
     }
@@ -34,12 +34,12 @@ public class ResumeExperienceResponse {
         this.company = company;
     }
 
-    public String getRole() {
-        return role;
+    public String getJobTitle() {
+        return jobTitle;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
     }
 
     public String getDuration() {
