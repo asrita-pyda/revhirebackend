@@ -1,42 +1,38 @@
 package org.example.revhire.model;
-import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "resume_files")
-public class ResumeFiles {
+public class ResumeFiles extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "file_name", length = 200)
     private String fileName;
-
-    @Column(name = "file_path", length = 255)
     private String filePath;
-
-    @Column(name = "file_type", length = 20)
     private String fileType;
 
-    @Column(name = "uploaded_at")
-    private LocalDateTime uploadedAt;
+    @Lob
+    @Column(name = "file_data", length = 2097152)
+    private byte[] fileData;
 
     public ResumeFiles() {
     }
 
-    public ResumeFiles(Long id, User user, String fileName, String filePath, String fileType, LocalDateTime uploadedAt) {
+    public ResumeFiles(Long id, User user, String fileName, String filePath, String fileType,
+                       byte[] fileData) {
         this.id = id;
         this.user = user;
         this.fileName = fileName;
         this.filePath = filePath;
         this.fileType = fileType;
-        this.uploadedAt = uploadedAt;
+        this.fileData = fileData;
     }
 
     public Long getId() {
@@ -79,12 +75,15 @@ public class ResumeFiles {
         this.fileType = fileType;
     }
 
-    public LocalDateTime getUploadedAt() {
-        return uploadedAt;
+    public byte[] getFileData() {
+        return fileData;
     }
 
-    public void setUploadedAt(LocalDateTime uploadedAt) {
-        this.uploadedAt = uploadedAt;
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
+    }
+
+    public java.time.LocalDateTime getUploadedAt() {
+        return getCreatedAt();
     }
 }
-

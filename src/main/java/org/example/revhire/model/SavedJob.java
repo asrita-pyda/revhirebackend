@@ -1,71 +1,63 @@
 package org.example.revhire.model;
 
+
+
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(
-        name = "saved_jobs",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "job_id"})
-        }
-)
-public class SavedJob {
+@Table(name = "saved_jobs", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "user_id", "job_id" })
+})
+public class SavedJob extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private int userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name = "job_id", nullable = false)
-    private int jobId;
-
-    @Column(name = "saved_at")
-    private Timestamp savedAt;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id")
+    private Job job;
 
     public SavedJob() {
+
     }
 
-    public SavedJob(int id, int userId, int jobId, Timestamp savedAt) {
+    public SavedJob(Long id, User user, Job job, LocalDateTime savedAt) {
         this.id = id;
-        this.userId = userId;
-        this.jobId = jobId;
-        this.savedAt = savedAt;
+        this.user = user;
+        this.job = job;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getJobId() {
-        return jobId;
+    public Job getJob() {
+        return job;
     }
 
-    public void setJobId(int jobId) {
-        this.jobId = jobId;
+    public void setJob(Job job) {
+        this.job = job;
     }
 
-    public Timestamp getSavedAt() {
-        return savedAt;
-    }
-
-    public void setSavedAt(Timestamp savedAt) {
-        this.savedAt = savedAt;
+    public java.time.LocalDateTime getSavedAt() {
+        return getCreatedAt();
     }
 }
-
