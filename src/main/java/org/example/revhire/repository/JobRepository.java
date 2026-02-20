@@ -23,7 +23,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             +
             "(:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', :location, '%'))) AND " +
             "(:jobType IS NULL OR j.jobType = :jobType) AND " +
-            "j.status = 'OPEN' ORDER BY j.postedAt DESC")
+            "j.status = 'OPEN' ORDER BY j.createdAt DESC")
     List<Job> findByCombinedFilters(@Param("keyword") String keyword,
                                     @Param("location") String location,
                                     @Param("jobType") JobType jobType);
