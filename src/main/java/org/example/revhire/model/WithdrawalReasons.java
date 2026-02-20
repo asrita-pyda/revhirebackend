@@ -1,38 +1,37 @@
 package org.example.revhire.model;
 
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "withdrawal_reasons")
-public class WithdrawalReasons {
+public class WithdrawalReasons extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id", nullable = false)
     private Applications application;
 
     @Column(columnDefinition = "TEXT")
     private String reason;
 
-
     public WithdrawalReasons() {
 
     }
-
 
     public WithdrawalReasons(Applications application, String reason) {
         this.application = application;
         this.reason = reason;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

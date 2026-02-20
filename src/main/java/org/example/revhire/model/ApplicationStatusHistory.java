@@ -9,9 +9,9 @@ public class ApplicationStatusHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id", nullable = false)
     private Applications application;
 
@@ -37,12 +37,11 @@ public class ApplicationStatusHistory {
         this.changedAt = LocalDateTime.now();
     }
 
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -1,30 +1,17 @@
-package org.example.revhire.model;
+package org.example.revhire.dto.response;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "resume_education")
-public class ResumeEducation extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ResumeEducationResponse {
     private Integer id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     private String degree;
     private String institution;
     private Integer year;
     private String cgpa;
 
-    public ResumeEducation() {
+    public ResumeEducationResponse() {
     }
 
-    public ResumeEducation(Integer id, User user, String degree, String institution, Integer year, String cgpa) {
+    public ResumeEducationResponse(Integer id, String degree, String institution, Integer year, String cgpa) {
         this.id = id;
-        this.user = user;
         this.degree = degree;
         this.institution = institution;
         this.year = year;
@@ -37,14 +24,6 @@ public class ResumeEducation extends BaseEntity {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getDegree() {

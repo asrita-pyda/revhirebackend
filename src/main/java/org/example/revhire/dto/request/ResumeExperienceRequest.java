@@ -1,53 +1,20 @@
-package org.example.revhire.model;
+package org.example.revhire.dto.request;
 
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "resume_experience")
-public class ResumeExperience extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
+public class ResumeExperienceRequest {
     private String company;
     private String jobTitle;
     private String duration;
-
-    @Column(columnDefinition = "TEXT")
     private String description;
 
-    public ResumeExperience() {
+    public ResumeExperienceRequest() {
     }
 
-    public ResumeExperience(Integer id, User user, String company, String jobTitle, String duration,
-                            String description) {
-        this.id = id;
-        this.user = user;
+    public ResumeExperienceRequest(String company, String jobTitle, String duration, String description) {
         this.company = company;
         this.jobTitle = jobTitle;
         this.duration = duration;
         this.description = description;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getCompany() {
