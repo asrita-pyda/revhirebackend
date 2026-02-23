@@ -3,32 +3,33 @@ package org.example.revhire.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="job_skills")
-public class JobSkill {
+@Table(name = "job_skills")
+public class JobSkill extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 
     private String skill;
 
-    public JobSkill(){
+    public JobSkill() {
 
     }
-    public JobSkill(Long id, Job job, String skill) {
+
+    public JobSkill(Integer id, Job job, String skill) {
         this.id = id;
         this.job = job;
         this.skill = skill;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

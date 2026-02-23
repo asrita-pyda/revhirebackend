@@ -1,43 +1,45 @@
 package org.example.revhire.model;
+
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "resume_certifications")
-public class ResumeCertifications {
+public class ResumeCertifications extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "certificate_name", length = 150)
-    private String certificateName;
-
-    @Column(length = 150)
-    private String organization;
-
-    private Integer year;
+    private String name;
+    private String issuingOrganization;
+    private java.time.LocalDate issueDate;
+    private java.time.LocalDate expiryDate;
+    private String credentialUrl;
 
     public ResumeCertifications() {
     }
 
-    public ResumeCertifications(Long id, User user, String certificateName, String organization, Integer year) {
+    public ResumeCertifications(Integer id, User user, String name, String issuingOrganization,
+                                java.time.LocalDate issueDate, java.time.LocalDate expiryDate, String credentialUrl) {
         this.id = id;
         this.user = user;
-        this.certificateName = certificateName;
-        this.organization = organization;
-        this.year = year;
+        this.name = name;
+        this.issuingOrganization = issuingOrganization;
+        this.issueDate = issueDate;
+        this.expiryDate = expiryDate;
+        this.credentialUrl = credentialUrl;
     }
 
-    public Long getId(){
-
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -49,27 +51,43 @@ public class ResumeCertifications {
         this.user = user;
     }
 
-    public String getCertificateName() {
-        return certificateName;
+    public String getName() {
+        return name;
     }
 
-    public void setCertificateName(String certificateName) {
-        this.certificateName = certificateName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getOrganization() {
-        return organization;
+    public String getIssuingOrganization() {
+        return issuingOrganization;
     }
 
-    public void setOrganization(String organization) {
-        this.organization = organization;
+    public void setIssuingOrganization(String issuingOrganization) {
+        this.issuingOrganization = issuingOrganization;
     }
 
-    public Integer getYear() {
-        return year;
+    public java.time.LocalDate getIssueDate() {
+        return issueDate;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
+    public void setIssueDate(java.time.LocalDate issueDate) {
+        this.issueDate = issueDate;
+    }
+
+    public java.time.LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(java.time.LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public String getCredentialUrl() {
+        return credentialUrl;
+    }
+
+    public void setCredentialUrl(String credentialUrl) {
+        this.credentialUrl = credentialUrl;
     }
 }
