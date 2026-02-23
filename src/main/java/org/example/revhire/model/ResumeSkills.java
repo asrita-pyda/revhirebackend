@@ -1,35 +1,37 @@
 package org.example.revhire.model;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "resume_skills")
-public class ResumeSkills {
+public class ResumeSkills extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "skill_name", length = 100)
     private String skillName;
+    private String proficiency;
 
     public ResumeSkills() {
     }
 
-    public ResumeSkills(Long id, User user, String skillName) {
+    public ResumeSkills(Integer id, User user, String skillName, String proficiency) {
         this.id = id;
         this.user = user;
         this.skillName = skillName;
+        this.proficiency = proficiency;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -47,5 +49,13 @@ public class ResumeSkills {
 
     public void setSkillName(String skillName) {
         this.skillName = skillName;
+    }
+
+    public String getProficiency() {
+        return proficiency;
+    }
+
+    public void setProficiency(String proficiency) {
+        this.proficiency = proficiency;
     }
 }

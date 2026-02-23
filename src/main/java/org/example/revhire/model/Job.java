@@ -1,22 +1,20 @@
 package org.example.revhire.model;
 
 import jakarta.persistence.*;
- import org.example.revhire.enums.JobStatus;
+import org.example.revhire.enums.JobStatus;
 import org.example.revhire.enums.JobType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name="jobs")
-public class Job {
+@Table(name = "jobs")
+public class Job extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id")
     private User employer;
 
@@ -47,16 +45,16 @@ public class Job {
     @Enumerated(EnumType.STRING)
     private JobStatus status = JobStatus.OPEN;
 
-    private LocalDateTime postedAt = LocalDateTime.now();
-
-
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobSkill> jobSkills;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobView> jobViews;
 
-    public Job(Long id, User employer, String title, String description, String requirements, String skillsRequired, String location, Integer salaryMin, Integer salaryMax, JobType jobType, Integer experienceYears, Integer openings, LocalDate deadline, JobStatus status, LocalDateTime postedAt, List<JobSkill> jobSkills, List<JobView> jobViews) {
+    public Job(Long id, User employer, String title, String description, String requirements, String skillsRequired,
+               String location, Integer salaryMin, Integer salaryMax, JobType jobType, Integer experienceYears,
+               Integer openings, LocalDate deadline, JobStatus status, List<JobSkill> jobSkills,
+               List<JobView> jobViews) {
         this.id = id;
         this.employer = employer;
         this.title = title;
@@ -71,17 +69,13 @@ public class Job {
         this.openings = openings;
         this.deadline = deadline;
         this.status = status;
-        this.postedAt = postedAt;
         this.jobSkills = jobSkills;
         this.jobViews = jobViews;
     }
 
-    public Job(){
+    public Job() {
 
     }
-
-
-
 
     public Long getId() {
         return id;
@@ -131,12 +125,16 @@ public class Job {
         this.skillsRequired = skillsRequired;
     }
 
-    public String getLocation() {
+    public String location() {
         return location;
     }
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public Integer getSalaryMin() {
@@ -195,8 +193,23 @@ public class Job {
         this.status = status;
     }
 
-    public LocalDateTime getPostedAt() {
-        return postedAt;
+    public List<JobSkill> getJobSkills() {
+        return jobSkills;
+    }
+
+    public void setJobSkills(List<JobSkill> jobSkills) {
+        this.jobSkills = jobSkills;
+    }
+
+    public List<JobView> getJobViews() {
+        return jobViews;
+    }
+
+    public void setJobViews(List<JobView> jobViews) {
+        this.jobViews = jobViews;
+    }
+
+    public java.time.LocalDateTime getPostedAt() {
+        return getCreatedAt();
     }
 }
-
