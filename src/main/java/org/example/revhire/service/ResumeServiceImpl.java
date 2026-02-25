@@ -2,6 +2,7 @@ package org.example.revhire.service;
 
 import org.example.revhire.dto.request.*;
 import org.example.revhire.dto.response.ResumeResponse;
+import org.example.revhire.mapper.ResumeMapper;
 import org.example.revhire.model.*;
 import org.example.revhire.repository.*;
 import jakarta.transaction.Transactional;

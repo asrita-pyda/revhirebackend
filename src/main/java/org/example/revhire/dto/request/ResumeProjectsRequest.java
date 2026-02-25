@@ -4,16 +4,18 @@ public class ResumeProjectsRequest {
     private String title;
     private String description;
     private String role;
-    private String techStack;
+    private String technologies;
+    private String link;
 
     public ResumeProjectsRequest() {
     }
 
-    public ResumeProjectsRequest(String title, String description, String role, String techStack) {
+    public ResumeProjectsRequest(String title, String description, String role, String technologies, String link) {
         this.title = title;
         this.description = description;
         this.role = role;
-        this.techStack = techStack;
+        this.technologies = technologies;
+        this.link = link;
     }
 
     public String getTitle() {
@@ -40,11 +42,19 @@ public class ResumeProjectsRequest {
         this.role = role;
     }
 
-    public String getTechStack() {
-        return techStack;
+    public String getTechnologies() {
+        return technologies;
     }
 
-    public void setTechStack(String techStack) {
-        this.techStack = techStack;
+    public void setTechnologies(String technologies) {
+        this.technologies = technologies;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }
