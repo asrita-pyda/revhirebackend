@@ -306,8 +306,8 @@ public class JobServiceImpl implements JobService {
 
         stats.setTotalApplications((long) apps.size());
         stats.setNewApplications(apps.stream()
-                .filter(a -> a.getCreatedAt() != null
-                        && a.getCreatedAt().isAfter(java.time.LocalDateTime.now().minusHours(48)))
+                .filter(a -> a.getAppliedAt() != null
+                        && a.getAppliedAt().isAfter(java.time.LocalDateTime.now().minusHours(48)))
                 .count());
 
         return stats;
@@ -328,5 +328,4 @@ public class JobServiceImpl implements JobService {
 
         return dto;
     }
-
 }
