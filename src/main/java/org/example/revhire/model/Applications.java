@@ -2,6 +2,7 @@ package org.example.revhire.model;
 import jakarta.persistence.*;
 import org.example.revhire.enums.ApplicationStatus;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "applications", uniqueConstraints = {
@@ -15,14 +16,17 @@ public class Applications {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id", nullable = false)
+    @JsonIgnore
     private Job job;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seeker_id", nullable = false)
+    @JsonIgnore
     private User seeker;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_file_id")
+    @JsonIgnore
     private ResumeFiles resumeFile;
 
     @Column(columnDefinition = "TEXT")

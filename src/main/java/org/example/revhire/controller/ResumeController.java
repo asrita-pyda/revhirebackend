@@ -128,7 +128,10 @@ public class ResumeController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Certification deleted"));
     }
 
-    @PostMapping("/user/{userId}/upload")
+    @PostMapping(
+            value = "/user/{userId}/upload",
+            consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<ApiResponse<ResumeFiles>> uploadFile(@PathVariable Long userId,
                                                                @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
         return ResponseEntity
