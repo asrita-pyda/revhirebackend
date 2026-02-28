@@ -1,6 +1,7 @@
 package org.example.revhire.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "resume_experience")
@@ -12,6 +13,7 @@ public class ResumeExperience extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     private String company;

@@ -2,6 +2,7 @@ package org.example.revhire.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "application_notes")
@@ -13,6 +14,7 @@ public class ApplicationNotes {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id", nullable = false)
+    @JsonIgnore
     private Applications application;
 
     @Column(columnDefinition = "TEXT")

@@ -4,6 +4,7 @@ package org.example.revhire.controller;
 import org.example.revhire.dto.response.ApiResponse;
 import org.example.revhire.dto.request.ApplicationRequest;
 import org.example.revhire.dto.request.BulkStatusUpdateRequest;
+import org.example.revhire.dto.request.WithdrawalReasonRequest;
 import org.example.revhire.dto.response.ApplicationResponse;
 import org.example.revhire.enums.ApplicationStatus;
 import org.example.revhire.service.ApplicationService;
@@ -54,8 +55,9 @@ public class ApplicationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> withdrawApplication(@PathVariable Long id,
-                                                                 @RequestBody(required = false) java.util.Map<String, String> payload) {
-        String reason = payload != null ? payload.get("reason") : null;
+                                                                 @org.springframework.web.bind.annotation.RequestBody(required = false)
+                                                                 WithdrawalReasonRequest payload) {
+        String reason = payload != null ? payload.getReason() : null;
         applicationService.withdrawApplication(id, reason);
         return ResponseEntity.ok(new ApiResponse<>(true, "Application withdrawn"));
     }
@@ -135,4 +137,3 @@ public class ApplicationController {
                 .ok(new ApiResponse<>(true, "Withdrawal reasons retrieved", applicationService.getWithdrawalReasons()));
     }
 }
-
