@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface StatisticsService {
-    EmployerStatsResponse getEmployerStats(Integer employerId);
+    EmployerStatsResponse getEmployerStats(Long employerId);
 
     PlatformStatsResponse getPlatformOverview();
 
@@ -13,7 +13,7 @@ public interface StatisticsService {
 
     List<Map<String, Object>> getApplicationTrends();
 
-    Map<String, Object> getEmployerActivity(Integer employerId);
+    Map<String, Object> getEmployerActivity(Long employerId);
 
-    Map<String, Object> getSeekerEngagement(Integer userId);
+    Map<String, Object> getSeekerEngagement(Long userId);
 }

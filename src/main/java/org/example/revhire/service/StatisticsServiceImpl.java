@@ -32,7 +32,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public EmployerStatsResponse getEmployerStats(Integer employerId) {
+    public EmployerStatsResponse getEmployerStats(Long employerId) {
         EmployerStatsResponse stats = new EmployerStatsResponse();
         List<Job> employerJobs = jobRepository.findAll().stream()
                 .filter(j -> j.getEmployer().getId().equals(employerId))
@@ -122,7 +122,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Map<String, Object> getEmployerActivity(Integer employerId) {
+    public Map<String, Object> getEmployerActivity(Long employerId) {
         Map<String, Object> activity = new HashMap<>();
         List<Job> employerJobs = jobRepository.findAll().stream()
                 .filter(j -> j.getEmployer().getId().equals(employerId))
@@ -140,7 +140,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Map<String, Object> getSeekerEngagement(Integer userId) {
+    public Map<String, Object> getSeekerEngagement(Long userId) {
         Map<String, Object> engagement = new HashMap<>();
         List<Applications> seekerApps = applicationRepository.findAll().stream()
                 .filter(a -> a.getSeeker().getId().equals(userId))
