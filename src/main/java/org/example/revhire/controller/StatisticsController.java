@@ -22,7 +22,7 @@ public class StatisticsController {
     }
 
     @GetMapping("/employer/{id}")
-    public ResponseEntity<ApiResponse<EmployerStatsResponse>> getEmployerStats(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<EmployerStatsResponse>> getEmployerStats(@PathVariable Long id) {
         return ResponseEntity
                 .ok(new ApiResponse<>(true, "Employer statistics retrieved", statisticsService.getEmployerStats(id)));
     }
@@ -46,13 +46,13 @@ public class StatisticsController {
     }
 
     @GetMapping("/activity/employer/{id}")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getEmployerActivity(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getEmployerActivity(@PathVariable Long id) {
         return ResponseEntity
                 .ok(new ApiResponse<>(true, "Employer activity retrieved", statisticsService.getEmployerActivity(id)));
     }
 
     @GetMapping("/engagement/seeker/{id}")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getSeekerEngagement(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getSeekerEngagement(@PathVariable Long id) {
         return ResponseEntity.ok(new ApiResponse<>(true, "Seeker engagement stats retrieved",
                 statisticsService.getSeekerEngagement(id)));
     }
