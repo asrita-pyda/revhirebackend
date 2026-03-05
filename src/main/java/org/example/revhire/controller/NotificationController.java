@@ -30,6 +30,12 @@ public class NotificationController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/unread")
+    public ResponseEntity<Void> markAsUnread(@PathVariable Long id) {
+        notificationService.markAsUnread(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/user/{userId}/unread-count")
     public ResponseEntity<Long> getUnreadCount(@PathVariable Long userId) {
         return ResponseEntity.ok(notificationService.getUnreadCount(userId));
@@ -53,4 +59,3 @@ public class NotificationController {
         return ResponseEntity.noContent().build();
     }
 }
-
