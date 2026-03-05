@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.time.LocalDate;
 
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
@@ -29,6 +30,8 @@ public interface JobRepository extends JpaRepository<Job, Long> {
                                     @Param("jobType") JobType jobType);
 
     List<Job> findByStatus(JobStatus status);
+
+    List<Job> findByStatusAndDeadlineBefore(JobStatus status, LocalDate deadline);
 
     List<Job> findByEmployerId(Long employerId);
 
