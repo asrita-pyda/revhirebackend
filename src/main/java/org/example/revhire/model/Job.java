@@ -26,6 +26,8 @@ public class Job extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String requirements;
 
+    private String requiredEducationLevel;
+
     private String skillsRequired;
 
     private String location;
@@ -37,6 +39,7 @@ public class Job extends BaseEntity {
     private JobType jobType;
 
     private Integer experienceYears;
+    private Integer maxExperienceYears;
 
     private Integer openings;
 
@@ -51,21 +54,25 @@ public class Job extends BaseEntity {
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JobView> jobViews;
 
-    public Job(Long id, User employer, String title, String description, String requirements, String skillsRequired,
+    public Job(Long id, User employer, String title, String description, String requirements,
+               String requiredEducationLevel, String skillsRequired,
                String location, Integer salaryMin, Integer salaryMax, JobType jobType, Integer experienceYears,
-               Integer openings, LocalDate deadline, JobStatus status, List<JobSkill> jobSkills,
+               Integer maxExperienceYears, Integer openings, LocalDate deadline, JobStatus status,
+               List<JobSkill> jobSkills,
                List<JobView> jobViews) {
         this.id = id;
         this.employer = employer;
         this.title = title;
         this.description = description;
         this.requirements = requirements;
+        this.requiredEducationLevel = requiredEducationLevel;
         this.skillsRequired = skillsRequired;
         this.location = location;
         this.salaryMin = salaryMin;
         this.salaryMax = salaryMax;
         this.jobType = jobType;
         this.experienceYears = experienceYears;
+        this.maxExperienceYears = maxExperienceYears;
         this.openings = openings;
         this.deadline = deadline;
         this.status = status;
@@ -115,6 +122,14 @@ public class Job extends BaseEntity {
 
     public void setRequirements(String requirements) {
         this.requirements = requirements;
+    }
+
+    public String getRequiredEducationLevel() {
+        return requiredEducationLevel;
+    }
+
+    public void setRequiredEducationLevel(String requiredEducationLevel) {
+        this.requiredEducationLevel = requiredEducationLevel;
     }
 
     public String getSkillsRequired() {
@@ -167,6 +182,14 @@ public class Job extends BaseEntity {
 
     public void setExperienceYears(Integer experienceYears) {
         this.experienceYears = experienceYears;
+    }
+
+    public Integer getMaxExperienceYears() {
+        return maxExperienceYears;
+    }
+
+    public void setMaxExperienceYears(Integer maxExperienceYears) {
+        this.maxExperienceYears = maxExperienceYears;
     }
 
     public Integer getOpenings() {
