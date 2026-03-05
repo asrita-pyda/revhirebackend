@@ -54,12 +54,14 @@ public class JobServiceImpl implements JobService {
         job.setTitle(req.getTitle());
         job.setDescription(req.getDescription());
         job.setRequirements(req.getRequirements());
+        job.setRequiredEducationLevel(req.getRequiredEducationLevel());
         job.setSkillsRequired(req.getSkillsRequired());
         job.setLocation(req.getLocation());
         job.setSalaryMin(req.getSalaryMin());
         job.setSalaryMax(req.getSalaryMax());
         job.setJobType(req.getJobType());
         job.setExperienceYears(req.getExperienceYears());
+        job.setMaxExperienceYears(req.getMaxExperienceYears());
         job.setOpenings(req.getOpenings());
         job.setDeadline(req.getDeadline());
 
@@ -167,6 +169,8 @@ public class JobServiceImpl implements JobService {
             job.setDescription(req.getDescription());
         if (req.getRequirements() != null)
             job.setRequirements(req.getRequirements());
+        if (req.getRequiredEducationLevel() != null)
+            job.setRequiredEducationLevel(req.getRequiredEducationLevel());
         if (req.getSkillsRequired() != null)
             job.setSkillsRequired(req.getSkillsRequired());
         if (req.getLocation() != null)
@@ -179,6 +183,8 @@ public class JobServiceImpl implements JobService {
             job.setJobType(req.getJobType());
         if (req.getExperienceYears() != null)
             job.setExperienceYears(req.getExperienceYears());
+        if (req.getMaxExperienceYears() != null)
+            job.setMaxExperienceYears(req.getMaxExperienceYears());
         if (req.getOpenings() != null)
             job.setOpenings(req.getOpenings());
         if (req.getDeadline() != null)

@@ -46,23 +46,29 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     @Transactional
     public ApplicationResponse applyForJob(ApplicationRequest req) {
-        boolean alreadyApplied = applicationRepository.findAll().stream()
-                .anyMatch(a -> a.getJob().getId().equals(req.getJobId()) &&
-                        a.getSeeker().getId().equals(req.getSeekerId()));
-
-        if (alreadyApplied) {
-            throw new RuntimeException("Already applied for this job");
-        }
-
         Job job = jobRepository.findById(req.getJobId())
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
         User seeker = userRepository.findById(req.getSeekerId())
                 .orElseThrow(() -> new RuntimeException("Seeker not found"));
 
-        Applications applications = new Applications();
-        applications.setJob(job);
-        applications.setSeeker(seeker);
+        Applications applications = applicationRepository.findAll().stream()
+                .filter(a -> a.getJob().getId().equals(req.getJobId()) && a.getSeeker().getId().equals(req.getSeekerId()))
+                .findFirst()
+                .orElse(null);
+
+        if (applications != null &&
+                applications.getStatus() != ApplicationStatus.REJECTED &&
+                applications.getStatus() != ApplicationStatus.WITHDRAWN) {
+            throw new RuntimeException("Already applied for this job");
+        }
+
+        if (applications == null) {
+            applications = new Applications();
+            applications.setJob(job);
+            applications.setSeeker(seeker);
+        }
+
         applications.setCoverLetter(req.getCoverLetter());
 
         if (req.getResumeFileId() != null) {
@@ -72,6 +78,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
         applications.setStatus(ApplicationStatus.APPLIED);
+        applications.setAppliedAt(java.time.LocalDateTime.now());
 
         Applications savedApp = applicationRepository.save(applications);
 
@@ -229,4 +236,3 @@ public class ApplicationServiceImpl implements ApplicationService {
         return withdrawalReasonsRepository.findAll();
     }
 }
-

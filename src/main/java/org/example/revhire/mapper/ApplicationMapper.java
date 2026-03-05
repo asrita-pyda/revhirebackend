@@ -1,7 +1,5 @@
 package org.example.revhire.mapper;
 
-
-
 import org.example.revhire.dto.response.ApplicationResponse;
 import org.example.revhire.model.Applications;
 import org.mapstruct.Mapper;
@@ -9,7 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ApplicationMapper {
-
 
     @Mapping(source = "job.id", target = "jobId")
     @Mapping(source = "job.title", target = "jobTitle")

@@ -26,6 +26,11 @@ public class SavedJobServiceImpl implements SavedJobService {
         this.userRepository = userRepository;
         this.jobRepository = jobRepository;
     }
+    // We need mapToDto logic here, duplication, or better inject JobService but
+    // JobService might use SavedJobService later.
+    // Ideally mapToDto should be in a Mapper component. For now I'll duplicate
+    // minimal mapping or just return Job entities wrapped in DTO.
+    // Or I'll just use a Mapper method here.
 
     @Override
     @Transactional
@@ -60,7 +65,7 @@ public class SavedJobServiceImpl implements SavedJobService {
                 .collect(Collectors.toList());
     }
 
-
+    // Quick mapper for now
     private JobResponse mapToDto(Job job) {
         JobResponse dto = new JobResponse();
         dto.setId(job.getId());
@@ -78,6 +83,7 @@ public class SavedJobServiceImpl implements SavedJobService {
         dto.setDeadline(job.getDeadline());
         dto.setStatus(job.getStatus());
         dto.setPostedAt(job.getCreatedAt());
+        // skipping skills for brevity on saved list
         return dto;
     }
 }

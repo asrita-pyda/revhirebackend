@@ -1,6 +1,5 @@
 package org.example.revhire.mapper;
 
-
 import org.example.revhire.dto.request.*;
 import org.example.revhire.dto.response.*;
 import org.example.revhire.model.*;
@@ -70,6 +69,7 @@ public interface ResumeMapper {
 
     ResumeSkillsResponse toDto(ResumeSkills skill);
 
+    @org.mapstruct.Mapping(source = "technologies", target = "techStack")
     ResumeProjectsResponse toDto(ResumeProjects project);
 
     ResumeCertificationsResponse toDto(ResumeCertifications certification);

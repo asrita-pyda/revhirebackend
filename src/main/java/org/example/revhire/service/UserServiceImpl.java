@@ -24,23 +24,31 @@ public class UserServiceImpl implements UserService {
     private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
     private final org.example.revhire.mapper.UserMapper userMapper;
     private final org.example.revhire.config.JwtUtils jwtUtils;
+    private final OtpService otpService;
 
     public UserServiceImpl(UserRepository userRepository, EmployerRepository employerRepository,
                            JobSeekerRepository jobSeekerRepository,
                            org.springframework.security.crypto.password.PasswordEncoder passwordEncoder,
                            org.example.revhire.mapper.UserMapper userMapper,
-                           org.example.revhire.config.JwtUtils jwtUtils) {
+                           org.example.revhire.config.JwtUtils jwtUtils,
+                           OtpService otpService) {
         this.userRepository = userRepository;
         this.employerRepository = employerRepository;
         this.jobSeekerRepository = jobSeekerRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.jwtUtils = jwtUtils;
+        this.otpService = otpService;
     }
 
     @Override
     @Transactional
     public AuthResponse registerUser(RegistrationRequest req) {
+        // Verify OTP before doing anything else
+        if (!otpService.verify(req.getEmail(), req.getOtpCode())) {
+            throw new RuntimeException("Invalid or expired OTP");
+        }
+
         if (userRepository.existsByEmail(req.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
@@ -262,4 +270,3 @@ public class UserServiceImpl implements UserService {
     }
 
 }
-
