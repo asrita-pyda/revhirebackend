@@ -20,7 +20,7 @@ public class JobMaintenanceService {
         this.notificationService = notificationService;
     }
 
-    // Runs every day at 01:00 server time.
+
     @Scheduled(cron = "0 0 1 * * *")
     public void autoCloseExpiredJobs() {
         List<Job> expiredOpenJobs = jobRepository.findByStatusAndDeadlineBefore(JobStatus.OPEN, LocalDate.now());

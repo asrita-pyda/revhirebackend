@@ -15,6 +15,7 @@ class JwtUtilsTest {
     @BeforeEach
     void setUp() throws Exception {
         jwtUtils = new JwtUtils();
+        // Set jwtExpirationMs via reflection since @Value won't be injected in plain unit tests.
         Field field = JwtUtils.class.getDeclaredField("jwtExpirationMs");
         field.setAccessible(true);
         field.setInt(jwtUtils, 3600000);
@@ -77,4 +78,3 @@ class JwtUtilsTest {
         assertEquals(email, jwtUtils.extractUsername(token));
     }
 }
-

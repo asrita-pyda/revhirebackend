@@ -9,7 +9,7 @@ public class AuthResponse {
     private String name;
     private String email;
     private Role role;
-    private String token; // For JWT implementation
+    private String token;
 
     public AuthResponse() {
     }

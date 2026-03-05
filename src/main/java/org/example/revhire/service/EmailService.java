@@ -19,9 +19,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    /**
-     * Sends a styled HTML email containing the OTP to the given address.
-     */
+
     public void sendOtpEmail(String toEmail, String otp) {
         try {
             MimeMessage message = mailSender.createMimeMessage();

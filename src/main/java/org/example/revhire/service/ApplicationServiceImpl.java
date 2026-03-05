@@ -82,7 +82,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         Applications savedApp = applicationRepository.save(applications);
 
-        // Notify Employer
+
         notificationService.createNotification(job.getEmployer().getId(),
                 "New application received for " + job.getTitle() + " from " + seeker.getName(),
                 "NEW_APPLICATION");
@@ -112,14 +112,14 @@ public class ApplicationServiceImpl implements ApplicationService {
         applications.setStatus(status);
         Applications savedApplications = applicationRepository.save(applications);
 
-        // Audit Trail
+
         ApplicationStatusHistory history = new ApplicationStatusHistory();
         history.setApplication(savedApplications);
         history.setOldStatus(oldStatus);
         history.setNewStatus(status.toString());
         statusHistoryRepo.save(history);
 
-        // Notification
+
         notificationService.createNotification(applications.getSeeker().getId(),
                 "Your application for " + applications.getJob().getTitle() + " has been updated to " + status,
                 "APPLICATION_UPDATE");
@@ -135,13 +135,13 @@ public class ApplicationServiceImpl implements ApplicationService {
         applications.setStatus(ApplicationStatus.WITHDRAWN);
         applicationRepository.save(applications);
 
-        // Save Reason
+
         if (reason != null && !reason.trim().isEmpty()) {
             WithdrawalReasons withdrawalReason = new WithdrawalReasons(applications, reason);
             withdrawalReasonsRepository.save(withdrawalReason);
         }
 
-        // Notification to Employer
+
         notificationService.createNotification(applications.getJob().getEmployer().getId(),
                 "A candidate has withdrawn from " + applications.getJob().getTitle(),
                 "APPLICATION_WITHDRAWN");
@@ -174,8 +174,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ApplicationResponse getFullApplicationDetails(Long id) {
         Applications app = applicationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
-        // Details are already in the object if fetched eagerly or via lazy loading in
-        // trans
         return applicationMapper.toDto(app);
     }
 

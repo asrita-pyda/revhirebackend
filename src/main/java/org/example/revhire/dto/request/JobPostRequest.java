@@ -34,7 +34,7 @@ public class JobPostRequest {
     @Future
     private LocalDate deadline;
 
-    private List<String> skills; // For JobSkill table
+    private List<String> skills;
 
     public JobPostRequest() {
     }

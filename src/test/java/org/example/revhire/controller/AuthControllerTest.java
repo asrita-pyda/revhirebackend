@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.revhire.dto.request.LoginRequest;
 import org.example.revhire.dto.request.RegistrationRequest;
 import org.example.revhire.dto.response.AuthResponse;
+import org.example.revhire.service.EmailService;
+import org.example.revhire.service.OtpService;
 import org.example.revhire.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -34,6 +37,15 @@ class AuthControllerTest {
 
     @MockBean
     private org.example.revhire.repository.UserRepository userRepository;
+
+    @MockBean
+    private JpaMetamodelMappingContext jpaMetamodelMappingContext;
+
+    @MockBean
+    private OtpService otpService;
+
+    @MockBean
+    private EmailService emailService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -72,3 +84,4 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.data.token").value("token"));
     }
 }
+
