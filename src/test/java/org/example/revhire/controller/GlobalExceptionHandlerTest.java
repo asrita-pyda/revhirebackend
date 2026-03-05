@@ -49,4 +49,3 @@ class GlobalExceptionHandlerTest {
         assertEquals("An unexpected error occurred: Unexpected", response.getBody().getMessage());
     }
 }
-

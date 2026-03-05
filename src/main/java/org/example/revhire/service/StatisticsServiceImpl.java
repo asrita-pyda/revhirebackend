@@ -107,7 +107,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     public List<Map<String, Object>> getApplicationTrends() {
         List<Applications> apps = applicationRepository.findAll();
 
-        // Group by status
+
         Map<String, Long> byStatus = apps.stream()
                 .collect(Collectors.groupingBy(a -> a.getStatus().name(), Collectors.counting()));
 

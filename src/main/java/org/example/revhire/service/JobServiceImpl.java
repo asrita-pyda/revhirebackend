@@ -191,9 +191,9 @@ public class JobServiceImpl implements JobService {
             job.setDeadline(req.getDeadline());
 
         if (req.getSkills() != null) {
-            // Remove existing skills
+
             job.getJobSkills().clear();
-            // Add new skills
+
             for (String skillName : req.getSkills()) {
                 JobSkill jobSkill = new JobSkill();
                 jobSkill.setJob(job);

@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public AuthResponse registerUser(RegistrationRequest req) {
-        // Verify OTP before doing anything else
+
         if (!otpService.verify(req.getEmail(), req.getOtpCode())) {
             throw new RuntimeException("Invalid or expired OTP");
         }

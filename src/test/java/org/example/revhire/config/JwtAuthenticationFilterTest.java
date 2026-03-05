@@ -150,4 +150,3 @@ class JwtAuthenticationFilterTest {
                 () -> filter.loadUserByUsername("missing@example.com"));
     }
 }
-

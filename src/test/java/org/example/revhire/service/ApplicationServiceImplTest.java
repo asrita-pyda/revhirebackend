@@ -540,4 +540,3 @@ class ApplicationServiceImplTest {
         assertEquals(0, result.size());
     }
 }
-

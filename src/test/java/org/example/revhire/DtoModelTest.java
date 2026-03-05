@@ -43,6 +43,8 @@ public class DtoModelTest {
 
         if (instance1 == null)
             return;
+
+        // Test Getters and Setters - populate both instances with SAME values
         List<Method> setters = new ArrayList<>();
         for (Method method : clazz.getMethods()) {
             if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
@@ -76,14 +78,19 @@ public class DtoModelTest {
             }
         }
 
+        // Test equals, hashCode, toString
         String str = instance1.toString();
         assertNotNull(str, "toString() returned null for " + clazz.getSimpleName());
 
+        // Self-equality
         assertEquals(instance1, instance1);
+        // Null check
         assertNotEquals(instance1, null);
+        // Different type check
         assertNotEquals(instance1, new Object());
 
         if (instance2 != null) {
+            // Test equals with same values
             try {
                 Method equalsMethod = clazz.getMethod("equals", Object.class);
                 if (equalsMethod.getDeclaringClass() == clazz) {
@@ -93,9 +100,10 @@ public class DtoModelTest {
                             "hashCode() mismatch for equal " + clazz.getSimpleName());
                 }
             } catch (Exception e) {
-
+                // ignore
             }
 
+            // Test equals with different values
             if (!setters.isEmpty()) {
                 dummyCounter = 100;
                 for (Method setter : setters) {
@@ -115,6 +123,7 @@ public class DtoModelTest {
         }
     }
 
+    // Test all-args constructors via reflection
     @Test
     public void testAllArgsConstructors() throws Exception {
         List<String> packages = Arrays.asList(
@@ -180,12 +189,13 @@ public class DtoModelTest {
         }
         if (type == byte[].class)
             return new byte[] { 1, 2, 3 };
+        // Handle entity types by creating no-arg instances
         try {
             java.lang.reflect.Constructor<?> noArgCtor = type.getDeclaredConstructor();
             noArgCtor.setAccessible(true);
             return noArgCtor.newInstance();
         } catch (Exception e) {
-
+            // type has no no-arg constructor
         }
         return null;
     }
@@ -222,6 +232,10 @@ public class DtoModelTest {
         }
         return classes;
     }
+
+    // ==========================================
+    // Explicit model entity tests
+    // ==========================================
 
     @Test
     public void testBaseEntityGettersSetters() {
@@ -289,10 +303,14 @@ public class DtoModelTest {
         job.setId(1L);
         User user = new User();
         user.setId(2L);
+
+        // Test all-args constructor
         JobView jv = new JobView(10L, job, user, LocalDateTime.now());
         assertEquals(10L, jv.getId());
         assertEquals(job, jv.getJob());
         assertEquals(user, jv.getUser());
+
+        // Test setters
         Job job2 = new Job();
         job2.setId(3L);
         jv.setId(20L);
@@ -308,10 +326,14 @@ public class DtoModelTest {
     public void testApplicationNotesGettersSettersAndConstructor() {
         Applications app = new Applications();
         app.setId(1L);
+
+        // Test all-args constructor
         ApplicationNotes notes = new ApplicationNotes(app, "Test note");
         assertEquals(app, notes.getApplication());
         assertEquals("Test note", notes.getNote());
         assertNotNull(notes.getCreatedAt());
+
+        // Test setters
         ApplicationNotes notes2 = new ApplicationNotes();
         notes2.setId(5);
         assertEquals(5, notes2.getId());
@@ -328,11 +350,15 @@ public class DtoModelTest {
     public void testApplicationStatusHistoryGettersSettersAndConstructor() {
         Applications app = new Applications();
         app.setId(1L);
+
+        // Test all-args constructor
         ApplicationStatusHistory history = new ApplicationStatusHistory(app, "APPLIED", "REVIEWED");
         assertEquals(app, history.getApplication());
         assertEquals("APPLIED", history.getOldStatus());
         assertEquals("REVIEWED", history.getNewStatus());
         assertNotNull(history.getChangedAt());
+
+        // Test setters
         ApplicationStatusHistory h2 = new ApplicationStatusHistory();
         h2.setId(10);
         assertEquals(10, h2.getId());
@@ -351,9 +377,13 @@ public class DtoModelTest {
     public void testWithdrawalReasonsGettersSettersAndConstructor() {
         Applications app = new Applications();
         app.setId(1L);
+
+        // Test all-args constructor
         WithdrawalReasons wr = new WithdrawalReasons(app, "Changed mind");
         assertEquals(app, wr.getApplication());
         assertEquals("Changed mind", wr.getReason());
+
+        // Test setters
         WithdrawalReasons wr2 = new WithdrawalReasons();
         wr2.setId(5);
         assertEquals(5, wr2.getId());
@@ -367,10 +397,14 @@ public class DtoModelTest {
     public void testJobSkillGettersSettersAndConstructor() {
         Job job = new Job();
         job.setId(1L);
+
+        // Test all-args constructor
         JobSkill js = new JobSkill(10, job, "Java");
         assertEquals(10, js.getId());
         assertEquals(job, js.getJob());
         assertEquals("Java", js.getSkill());
+
+        // Test setters
         JobSkill js2 = new JobSkill();
         js2.setId(20);
         assertEquals(20, js2.getId());
@@ -385,11 +419,15 @@ public class DtoModelTest {
     public void testJobSeekerGettersSettersAndConstructor() {
         User user = new User();
         user.setId(1L);
+
+        // Test all-args constructor
         JobSeeker js = new JobSeeker(1L, "Active", 5, user);
         assertEquals(1L, js.getUserId());
         assertEquals("Active", js.getCurrentStatus());
         assertEquals(5, js.getTotalExperience());
         assertEquals(user, js.getUser());
+
+        // Test setters
         JobSeeker js2 = new JobSeeker();
         js2.setUserId(2L);
         assertEquals(2L, js2.getUserId());
@@ -406,6 +444,8 @@ public class DtoModelTest {
     public void testEmployerGettersSettersAndConstructor() {
         User user = new User();
         user.setId(1L);
+
+        // Test all-args constructor
         Employer emp = new Employer(1L, "Acme", "Tech", "100-500",
                 "A great company", "https://acme.com", "NYC", user);
         assertEquals(1L, emp.getUserId());
@@ -416,6 +456,8 @@ public class DtoModelTest {
         assertEquals("https://acme.com", emp.getWebsite());
         assertEquals("NYC", emp.getLocation());
         assertEquals(user, emp.getUser());
+
+        // Test setters
         Employer emp2 = new Employer();
         emp2.setUserId(2L);
         assertEquals(2L, emp2.getUserId());
@@ -442,10 +484,14 @@ public class DtoModelTest {
         user.setId(1L);
         Job job = new Job();
         job.setId(2L);
+
+        // Test all-args constructor
         SavedJob sj = new SavedJob(10L, user, job, LocalDateTime.now());
         assertEquals(10L, sj.getId());
         assertEquals(user, sj.getUser());
         assertEquals(job, sj.getJob());
+
+        // Test setters
         SavedJob sj2 = new SavedJob();
         sj2.setId(20L);
         assertEquals(20L, sj2.getId());
@@ -465,6 +511,8 @@ public class DtoModelTest {
         seeker.setId(2L);
         ResumeFiles resume = new ResumeFiles();
         resume.setId(3L);
+
+        // Test all-args constructor with status
         Applications app = new Applications(100L, job, seeker, resume, "cover", ApplicationStatus.APPLIED);
         assertEquals(100L, app.getId());
         assertEquals(job, app.getJob());
@@ -473,8 +521,12 @@ public class DtoModelTest {
         assertEquals("cover", app.getCoverLetter());
         assertEquals(ApplicationStatus.APPLIED, app.getStatus());
         assertNotNull(app.getAppliedAt());
+
+        // Test constructor with null status (defaults to APPLIED)
         Applications app2 = new Applications(200L, job, seeker, resume, "letter", null);
         assertEquals(ApplicationStatus.APPLIED, app2.getStatus());
+
+        // Test setters
         Applications app3 = new Applications();
         app3.setId(300L);
         assertEquals(300L, app3.getId());
@@ -493,6 +545,9 @@ public class DtoModelTest {
         assertEquals(now, app3.getAppliedAt());
     }
 
+    // ==========================================
+    // DTO equals/hashCode/toString branch tests
+    // ==========================================
 
     @Test
     public void testLoginRequestEqualsBranches() {

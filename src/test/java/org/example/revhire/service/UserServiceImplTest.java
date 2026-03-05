@@ -43,6 +43,8 @@ class UserServiceImplTest {
     private UserMapper userMapper;
     @Mock
     private JwtUtils jwtUtils;
+    @Mock
+    private OtpService otpService;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -51,10 +53,12 @@ class UserServiceImplTest {
     void registerUser_Success() {
         RegistrationRequest req = new RegistrationRequest();
         req.setEmail("test@test.com");
+        req.setOtpCode("123456");
         req.setPassword("password");
         req.setRole(Role.EMPLOYER);
         req.setName("Test User");
 
+        when(otpService.verify("test@test.com", "123456")).thenReturn(true);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
 
@@ -240,6 +244,8 @@ class UserServiceImplTest {
     void registerUser_DuplicateEmail_Throws() {
         RegistrationRequest req = new RegistrationRequest();
         req.setEmail("existing@test.com");
+        req.setOtpCode("123456");
+        when(otpService.verify("existing@test.com", "123456")).thenReturn(true);
         when(userRepository.existsByEmail("existing@test.com")).thenReturn(true);
 
         assertThrows(RuntimeException.class, () -> userService.registerUser(req));
@@ -314,12 +320,14 @@ class UserServiceImplTest {
     void registerUser_JobSeeker_Success() {
         RegistrationRequest req = new RegistrationRequest();
         req.setEmail("seeker@test.com");
+        req.setOtpCode("123456");
         req.setPassword("password");
         req.setRole(Role.JOB_SEEKER);
         req.setName("Seeker");
         req.setCurrentStatus("Looking");
         req.setTotalExperience(2);
 
+        when(otpService.verify("seeker@test.com", "123456")).thenReturn(true);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
 
@@ -423,4 +431,3 @@ class UserServiceImplTest {
         assertEquals(0, result.size());
     }
 }
-
