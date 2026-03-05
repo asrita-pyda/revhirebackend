@@ -39,6 +39,14 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public void markAsUnread(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
+        notification.setIsRead(false);
+        notificationRepository.save(notification);
+    }
+
+    @Override
     public void createNotification(Long userId, String message, String type) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));

@@ -45,4 +45,3 @@ public interface UserService {
 
     UserResponse updateMyProfile(String email, UserResponse userResponse);
 }
-

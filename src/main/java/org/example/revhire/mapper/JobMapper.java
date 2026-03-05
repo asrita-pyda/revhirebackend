@@ -34,5 +34,9 @@ public interface JobMapper {
     @Mapping(target = "jobViews", ignore = true)
     @Mapping(target = "jobSkills", ignore = true)
     @Mapping(target = "employer", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
     Job toEntity(JobResponse jobResponse);
 }

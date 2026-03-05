@@ -240,12 +240,32 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public List<ResumeResponse> searchBySkill(String skillName) {
-        return List.of();
+        String target = skillName == null ? "" : skillName.trim().toLowerCase();
+        if (target.isEmpty()) {
+            return List.of();
+        }
+
+        return skillRepo.findAll().stream()
+                .filter(s -> s.getSkillName() != null && s.getSkillName().toLowerCase().contains(target))
+                .map(s -> s.getUser().getId())
+                .distinct()
+                .map(this::getResumeByUserId)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ResumeResponse> searchByLocation(String location) {
-        return List.of();
+        String target = location == null ? "" : location.trim().toLowerCase();
+        if (target.isEmpty()) {
+            return List.of();
+        }
+
+        return userRepository.findAll().stream()
+                .filter(u -> u.getLocation() != null && u.getLocation().toLowerCase().contains(target))
+                .map(User::getId)
+                .distinct()
+                .map(this::getResumeByUserId)
+                .collect(Collectors.toList());
     }
 
     @Override
