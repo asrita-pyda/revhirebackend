@@ -69,7 +69,9 @@ public interface ResumeMapper {
 
     ResumeSkillsResponse toDto(ResumeSkills skill);
 
-    @org.mapstruct.Mapping(source = "technologies", target = "techStack")
+    @org.mapstruct.Mapping(source =
+
+            "technologies", target = "techStack")
     ResumeProjectsResponse toDto(ResumeProjects project);
 
     ResumeCertificationsResponse toDto(ResumeCertifications certification);

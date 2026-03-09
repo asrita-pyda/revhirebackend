@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+
     @Mapping(target = "companyName", ignore = true)
     @Mapping(target = "industry", ignore = true)
     @Mapping(target = "companySize", ignore = true)
@@ -25,4 +26,3 @@ public interface UserMapper {
     @Mapping(target = "active", ignore = true)
     User toEntity(UserResponse userResponse);
 }
-

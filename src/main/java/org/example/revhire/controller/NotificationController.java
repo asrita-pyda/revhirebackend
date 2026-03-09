@@ -58,4 +58,40 @@ public class NotificationController {
         notificationService.clearAllNotifications(userId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping
+    public ResponseEntity<Void> createNotification(@RequestBody CreateNotificationRequest request) {
+        notificationService.createNotification(request.getUserId(), request.getMessage(), request.getType());
+        return ResponseEntity.noContent().build();
+    }
+
+    public static class CreateNotificationRequest {
+        private Long userId;
+        private String message;
+        private String type;
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(Long userId) {
+            this.userId = userId;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+    }
 }

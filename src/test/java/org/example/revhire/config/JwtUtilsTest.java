@@ -15,10 +15,13 @@ class JwtUtilsTest {
     @BeforeEach
     void setUp() throws Exception {
         jwtUtils = new JwtUtils();
-        // Set jwtExpirationMs via reflection since @Value won't be injected in plain unit tests.
+        Field secretField = JwtUtils.class.getDeclaredField("jwtSecret");
+        secretField.setAccessible(true);
+        secretField.set(jwtUtils, "revhire-secret-key-for-jwt-token-generation-2024-secure-key");
+        // Set jwtExpirationMs via reflection since @Value won't work in unit test
         Field field = JwtUtils.class.getDeclaredField("jwtExpirationMs");
         field.setAccessible(true);
-        field.setInt(jwtUtils, 3600000);
+        field.setInt(jwtUtils, 3600000); // 1 hour
     }
 
     @Test

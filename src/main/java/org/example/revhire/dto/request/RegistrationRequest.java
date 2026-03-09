@@ -24,14 +24,14 @@ public class RegistrationRequest {
     private String phone;
     private String location;
 
-
+    // Employer specific
     private String companyName;
     private String industry;
     private String companySize;
     private String description;
     private String website;
 
-
+    // JobSeeker specific
     private String currentStatus;
     private Integer totalExperience;
 

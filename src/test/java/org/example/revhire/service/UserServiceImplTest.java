@@ -16,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +25,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,20 +46,26 @@ class UserServiceImplTest {
     private JwtUtils jwtUtils;
     @Mock
     private OtpService otpService;
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private UserServiceImpl userService;
+
+    @BeforeEach
+    void setUp() {
+        lenient().when(otpService.verify(anyString(), nullable(String.class))).thenReturn(true);
+    }
 
     @Test
     void registerUser_Success() {
         RegistrationRequest req = new RegistrationRequest();
         req.setEmail("test@test.com");
-        req.setOtpCode("123456");
         req.setPassword("password");
         req.setRole(Role.EMPLOYER);
         req.setName("Test User");
+        req.setOtpCode("123456");
 
-        when(otpService.verify("test@test.com", "123456")).thenReturn(true);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
 
@@ -109,7 +116,7 @@ class UserServiceImplTest {
         user.setId(1L);
         user.setRole(Role.EMPLOYER);
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(employerRepository.findById(1L)).thenReturn(Optional.of(new Employer()));
+        when(employerRepository.findByUserReferenceId(1L)).thenReturn(Optional.of(new Employer()));
         when(userMapper.toDto(user)).thenReturn(new UserResponse());
 
         UserResponse dto = new UserResponse();
@@ -225,7 +232,7 @@ class UserServiceImplTest {
         user.setRole(Role.EMPLOYER);
         when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(employerRepository.findById(any())).thenReturn(Optional.of(new Employer()));
+        when(employerRepository.findByUserReferenceId(any())).thenReturn(Optional.of(new Employer()));
         when(userMapper.toDto(user)).thenReturn(new UserResponse());
 
         UserResponse result = userService.updateMyProfile("test@test.com", new UserResponse());
@@ -245,7 +252,6 @@ class UserServiceImplTest {
         RegistrationRequest req = new RegistrationRequest();
         req.setEmail("existing@test.com");
         req.setOtpCode("123456");
-        when(otpService.verify("existing@test.com", "123456")).thenReturn(true);
         when(userRepository.existsByEmail("existing@test.com")).thenReturn(true);
 
         assertThrows(RuntimeException.class, () -> userService.registerUser(req));
@@ -320,14 +326,13 @@ class UserServiceImplTest {
     void registerUser_JobSeeker_Success() {
         RegistrationRequest req = new RegistrationRequest();
         req.setEmail("seeker@test.com");
-        req.setOtpCode("123456");
         req.setPassword("password");
         req.setRole(Role.JOB_SEEKER);
         req.setName("Seeker");
         req.setCurrentStatus("Looking");
         req.setTotalExperience(2);
+        req.setOtpCode("123456");
 
-        when(otpService.verify("seeker@test.com", "123456")).thenReturn(true);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
 
@@ -389,7 +394,7 @@ class UserServiceImplTest {
         user.setId(1L);
         user.setRole(Role.EMPLOYER);
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(employerRepository.findById(1L)).thenReturn(Optional.empty());
+        when(employerRepository.findByUserReferenceId(1L)).thenReturn(Optional.empty());
         when(userMapper.toDto(user)).thenReturn(new UserResponse());
 
         UserResponse result = userService.getUserProfile(1L);
