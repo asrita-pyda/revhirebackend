@@ -14,6 +14,8 @@ public class JobResponse extends RepresentationModel<JobResponse> {
     private Long employerId;
     private String employerName;
     private String companyName;
+    private String companyWebsite;
+    private String companyLogoUrl;
 
     private String title;
     private String description;
@@ -103,6 +105,22 @@ public class JobResponse extends RepresentationModel<JobResponse> {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getCompanyWebsite() {
+        return companyWebsite;
+    }
+
+    public void setCompanyWebsite(String companyWebsite) {
+        this.companyWebsite = companyWebsite;
+    }
+
+    public String getCompanyLogoUrl() {
+        return companyLogoUrl;
+    }
+
+    public void setCompanyLogoUrl(String companyLogoUrl) {
+        this.companyLogoUrl = companyLogoUrl;
     }
 
     public String getTitle() {

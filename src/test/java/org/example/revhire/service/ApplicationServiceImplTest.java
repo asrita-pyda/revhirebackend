@@ -47,6 +47,18 @@ class ApplicationServiceImplTest {
     @Mock
     private org.example.revhire.repository.ResumeFileRepository resumeFileRepository;
     @Mock
+    private org.example.revhire.repository.ResumeObjectiveRepository resumeObjectiveRepository;
+    @Mock
+    private org.example.revhire.repository.ResumeEducationRepository resumeEducationRepository;
+    @Mock
+    private org.example.revhire.repository.ResumeExperienceRepository resumeExperienceRepository;
+    @Mock
+    private org.example.revhire.repository.ResumeSkillRepository resumeSkillRepository;
+    @Mock
+    private org.example.revhire.repository.ResumeProjectRepository resumeProjectRepository;
+    @Mock
+    private org.example.revhire.repository.ResumeCertificationRepository resumeCertificationRepository;
+    @Mock
     private org.example.revhire.repository.ApplicationStatusHistoryRepository statusHistoryRepo;
     @Mock
     private org.example.revhire.repository.ApplicationNoteRepository noteRepo;
@@ -77,10 +89,14 @@ class ApplicationServiceImplTest {
         employerUser.setId(2L);
         job.setEmployer(employerUser);
 
+        ResumeFiles resumeFile = new ResumeFiles();
+        resumeFile.setUser(seekerUser);
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(seekerUser));
         when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
         when(applicationRepository.findAll()).thenReturn(Collections.emptyList());
-        when(resumeFileRepository.findById(5L)).thenReturn(Optional.of(new ResumeFiles()));
+        when(resumeFileRepository.findByUserId(1L)).thenReturn(List.of(new ResumeFiles()));
+        when(resumeFileRepository.findById(5L)).thenReturn(Optional.of(resumeFile));
 
         Applications savedApp = new Applications();
         savedApp.setId(100L);
@@ -94,7 +110,7 @@ class ApplicationServiceImplTest {
 
         assertNotNull(response);
         verify(applicationRepository).save(any(Applications.class));
-        verify(notificationService).createNotification(any(), any(), any());
+        verify(notificationService, times(2)).createNotification(any(), any(), any());
     }
 
     @Test
@@ -158,6 +174,9 @@ class ApplicationServiceImplTest {
     void withdrawApplication_Success() {
         Applications app = new Applications();
         app.setStatus(ApplicationStatus.APPLIED);
+        User seeker = new User();
+        seeker.setId(1L);
+        app.setSeeker(seeker);
         Job job = new Job();
         job.setId(10L);
         User emp = new User();
@@ -171,7 +190,7 @@ class ApplicationServiceImplTest {
 
         assertEquals(ApplicationStatus.WITHDRAWN, app.getStatus());
         verify(withdrawalReasonsRepository).save(any());
-        verify(notificationService).createNotification(any(), any(), any());
+        verify(notificationService, times(2)).createNotification(any(), any(), any());
     }
 
     @Test
@@ -408,6 +427,7 @@ class ApplicationServiceImplTest {
         when(applicationRepository.findAll()).thenReturn(Collections.emptyList());
         when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
         when(userRepository.findById(1L)).thenReturn(Optional.of(seekerUser));
+        when(resumeFileRepository.findByUserId(1L)).thenReturn(List.of(new ResumeFiles()));
 
         Applications savedApp = new Applications();
         savedApp.setId(100L);
@@ -447,6 +467,9 @@ class ApplicationServiceImplTest {
     void withdrawApplication_NullReason_SkipsSaveReason() {
         Applications app = new Applications();
         app.setStatus(ApplicationStatus.APPLIED);
+        User seeker = new User();
+        seeker.setId(1L);
+        app.setSeeker(seeker);
         Job job = new Job();
         job.setId(1L);
         job.setTitle("Dev");

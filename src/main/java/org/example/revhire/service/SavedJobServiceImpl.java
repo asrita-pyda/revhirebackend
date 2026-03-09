@@ -27,7 +27,6 @@ public class SavedJobServiceImpl implements SavedJobService {
         this.jobRepository = jobRepository;
     }
 
-
     @Override
     @Transactional
     public void saveJob(Long userId, Long jobId) {
@@ -52,7 +51,6 @@ public class SavedJobServiceImpl implements SavedJobService {
         savedJobRepository.findByUserIdAndJobId(userId, jobId)
                 .ifPresent(savedJobRepository::delete);
     }
-
 
     @Override
     public List<JobResponse> getSavedJobs(Long userId) {
@@ -80,7 +78,6 @@ public class SavedJobServiceImpl implements SavedJobService {
         dto.setDeadline(job.getDeadline());
         dto.setStatus(job.getStatus());
         dto.setPostedAt(job.getCreatedAt());
-
         return dto;
     }
 }

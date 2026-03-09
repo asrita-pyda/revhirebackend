@@ -12,8 +12,11 @@ import org.example.revhire.repository.JobSkillRepository;
 import org.example.revhire.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,17 +28,20 @@ public class JobServiceImpl implements JobService {
     private final EmployerRepository employerRepository;
     private final org.example.revhire.repository.ApplicationRepository applicationRepository;
     private final org.example.revhire.mapper.JobMapper jobMapper;
+    private final NotificationService notificationService;
 
     public JobServiceImpl(JobRepository jobRepository, JobSkillRepository jobSkillRepository,
                           UserRepository userRepository, EmployerRepository employerRepository,
                           org.example.revhire.repository.ApplicationRepository applicationRepository,
-                          org.example.revhire.mapper.JobMapper jobMapper) {
+                          org.example.revhire.mapper.JobMapper jobMapper,
+                          NotificationService notificationService) {
         this.jobRepository = jobRepository;
         this.jobSkillRepository = jobSkillRepository;
         this.userRepository = userRepository;
         this.employerRepository = employerRepository;
         this.applicationRepository = applicationRepository;
         this.jobMapper = jobMapper;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -76,6 +82,10 @@ public class JobServiceImpl implements JobService {
             }
         }
 
+        notificationService.createNotification(employerUser.getId(),
+                "Job posted successfully: " + savedJob.getTitle(),
+                "JOB_POSTED");
+
         return mapToDto(savedJob);
     }
 
@@ -96,13 +106,21 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> searchJobs(String keyword, String location, JobType jobType) {
-        String kw = keyword != null ? keyword.toLowerCase() : null;
-        String loc = location != null ? location.toLowerCase() : null;
+        String normalizedKeyword = keyword == null ? null : keyword.trim().toLowerCase(Locale.ROOT);
+        if (normalizedKeyword != null && normalizedKeyword.isBlank()) {
+            normalizedKeyword = null;
+        }
+
+        String normalizedLocation = location == null ? null : location.trim().toLowerCase(Locale.ROOT);
+        if (normalizedLocation != null && normalizedLocation.isBlank()) {
+            normalizedLocation = null;
+        }
+        final String kw = normalizedKeyword;
+        final String loc = normalizedLocation;
 
         return jobRepository.findAll().stream()
                 .filter(j -> j.getStatus() == JobStatus.OPEN)
-                .filter(j -> kw == null || (j.getTitle() != null && j.getTitle().toLowerCase().contains(kw)) ||
-                        (j.getDescription() != null && j.getDescription().toLowerCase().contains(kw)))
+                .filter(j -> kw == null || matchesKeyword(j, kw))
                 .filter(j -> loc == null || (j.getLocation() != null && j.getLocation().toLowerCase().contains(loc)))
                 .filter(j -> jobType == null || j.getJobType() == jobType)
                 .sorted((j1, j2) -> j2.getCreatedAt().compareTo(j1.getCreatedAt()))
@@ -126,7 +144,11 @@ public class JobServiceImpl implements JobService {
     public JobResponse updateJobStatus(Long id, JobStatus status) {
         Job job = jobRepository.findById(id).orElseThrow(() -> new RuntimeException("Job not found"));
         job.setStatus(status);
-        return mapToDto(jobRepository.save(job));
+        Job saved = jobRepository.save(job);
+        notificationService.createNotification(job.getEmployer().getId(),
+                "Job status changed to " + status + " for " + job.getTitle(),
+                "JOB_STATUS");
+        return mapToDto(saved);
     }
 
     @Override
@@ -191,9 +213,9 @@ public class JobServiceImpl implements JobService {
             job.setDeadline(req.getDeadline());
 
         if (req.getSkills() != null) {
-
+            // Remove existing skills
             job.getJobSkills().clear();
-
+            // Add new skills
             for (String skillName : req.getSkills()) {
                 JobSkill jobSkill = new JobSkill();
                 jobSkill.setJob(job);
@@ -201,8 +223,11 @@ public class JobServiceImpl implements JobService {
                 job.getJobSkills().add(jobSkill);
             }
         }
-
-        return mapToDto(jobRepository.save(job));
+        Job saved = jobRepository.save(job);
+        notificationService.createNotification(saved.getEmployer().getId(),
+                "Job updated: " + saved.getTitle(),
+                "JOB_UPDATED");
+        return mapToDto(saved);
     }
 
     @Override
@@ -271,11 +296,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobType> getJobTypes() {
-        return jobRepository.findAll().stream()
-                .map(Job::getJobType)
-                .filter(t -> t != null)
-                .distinct()
-                .collect(Collectors.toList());
+        return Arrays.asList(JobType.values());
     }
 
     @Override
@@ -329,9 +350,81 @@ public class JobServiceImpl implements JobService {
     private JobResponse mapToDto(Job job) {
         JobResponse dto = jobMapper.toDto(job);
 
-        employerRepository.findById(job.getEmployer().getId())
-                .ifPresent(emp -> dto.setCompanyName(emp.getCompanyName()));
+        employerRepository.findByUserReferenceId(job.getEmployer().getId())
+                .ifPresent(emp -> {
+                    String companyName = emp.getCompanyName();
+                    String website = normalizeWebsite(emp.getWebsite());
+                    dto.setCompanyName(companyName);
+                    dto.setCompanyWebsite(website);
+                    dto.setCompanyLogoUrl(buildCompanyLogoUrl(website, companyName));
+                });
 
         return dto;
+    }
+
+    private String normalizeWebsite(String website) {
+        if (!StringUtils.hasText(website)) {
+            return null;
+        }
+        String trimmed = website.trim();
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+            return trimmed;
+        }
+        return "https://" + trimmed;
+    }
+
+    private String buildCompanyLogoUrl(String website, String companyName) {
+        String domain = extractDomain(website);
+        if (StringUtils.hasText(domain)) {
+            return "https://logo.clearbit.com/" + domain;
+        }
+        String safeName = StringUtils.hasText(companyName) ? companyName.trim() : "Company";
+        String encoded = java.net.URLEncoder.encode(safeName, java.nio.charset.StandardCharsets.UTF_8);
+        return "https://ui-avatars.com/api/?name=" + encoded
+                + "&background=0F172A&color=ffffff&bold=true&size=128";
+    }
+
+    private String extractDomain(String website) {
+        if (!StringUtils.hasText(website)) {
+            return null;
+        }
+        try {
+            java.net.URI uri = new java.net.URI(website);
+            String host = uri.getHost();
+            if (!StringUtils.hasText(host)) {
+                return null;
+            }
+            return host.toLowerCase(Locale.ROOT);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    private boolean matchesKeyword(Job job, String keyword) {
+        String companyName = employerRepository.findByUserReferenceId(job.getEmployer().getId())
+                .map(Employer::getCompanyName)
+                .orElse("");
+
+        String jobSkills = job.getJobSkills() == null
+                ? ""
+                : job.getJobSkills().stream()
+                .map(JobSkill::getSkill)
+                .filter(StringUtils::hasText)
+                .collect(Collectors.joining(" "));
+
+        String searchable = String.join(" ",
+                        valueOrEmpty(job.getTitle()),
+                        valueOrEmpty(job.getDescription()),
+                        valueOrEmpty(job.getRequirements()),
+                        valueOrEmpty(job.getSkillsRequired()),
+                        valueOrEmpty(companyName),
+                        valueOrEmpty(jobSkills))
+                .toLowerCase(Locale.ROOT);
+
+        return searchable.contains(keyword);
+    }
+
+    private String valueOrEmpty(String value) {
+        return value == null ? "" : value;
     }
 }

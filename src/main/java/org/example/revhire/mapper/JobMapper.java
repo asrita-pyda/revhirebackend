@@ -19,6 +19,8 @@ public interface JobMapper {
     @Mapping(source = "employer.id", target = "employerId")
     @Mapping(source = "employer.name", target = "employerName")
     @Mapping(target = "companyName", ignore = true)
+    @Mapping(target = "companyWebsite", ignore = true)
+    @Mapping(target = "companyLogoUrl", ignore = true)
     @Mapping(target = "viewCount", expression = "java(job.getJobViews() != null ? job.getJobViews().size() : 0)")
     @Mapping(source = "jobSkills", target = "skills", qualifiedByName = "mapSkills")
     @Mapping(source = "postedAt", target = "postedAt")

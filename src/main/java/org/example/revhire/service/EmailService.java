@@ -7,6 +7,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.net.UnknownHostException;
+
 @Service
 public class EmailService {
 
@@ -14,13 +16,20 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String fromEmail;
+    @Value("${spring.mail.password:}")
+    private String mailPassword;
 
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
-
+    /**
+     * Sends a styled HTML email containing the OTP to the given address.
+     */
     public void sendOtpEmail(String toEmail, String otp) {
+        if (fromEmail == null || fromEmail.trim().isEmpty() || mailPassword == null || mailPassword.trim().isEmpty()) {
+            throw new RuntimeException("SMTP is not configured. Set MAIL_USERNAME and MAIL_APP_PASSWORD.");
+        }
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -32,8 +41,31 @@ public class EmailService {
 
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException("Failed to send OTP email: " + e.getMessage(), e);
+            throw new RuntimeException(buildMailErrorMessage(e), e);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(buildMailErrorMessage(e), e);
         }
+    }
+
+    private String buildMailErrorMessage(Exception exception) {
+        Throwable root = getRootCause(exception);
+        if (root instanceof UnknownHostException) {
+            return "Cannot resolve SMTP host (" + root.getMessage()
+                    + "). Check internet/DNS or firewall settings, or enable app.otp.fallback-enabled for local testing.";
+        }
+        String rootMessage = root.getMessage();
+        if (rootMessage == null || rootMessage.isBlank()) {
+            return "Mail server connection or authentication failed.";
+        }
+        return "Mail server connection failed. " + rootMessage;
+    }
+
+    private Throwable getRootCause(Throwable throwable) {
+        Throwable current = throwable;
+        while (current.getCause() != null && current.getCause() != current) {
+            current = current.getCause();
+        }
+        return current;
     }
 
     private String buildEmailBody(String otp) {

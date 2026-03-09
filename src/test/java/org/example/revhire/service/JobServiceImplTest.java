@@ -48,6 +48,8 @@ class JobServiceImplTest {
     private ApplicationRepository applicationRepository;
     @Mock
     private JobMapper jobMapper;
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private JobServiceImpl jobService;
@@ -265,7 +267,8 @@ class JobServiceImplTest {
         job.setJobType(JobType.FULLTIME);
         when(jobRepository.findAll()).thenReturn(List.of(job));
         List<JobType> result = jobService.getJobTypes();
-        assertEquals(1, result.size());
+        assertEquals(JobType.values().length, result.size());
+        assertTrue(result.contains(JobType.FULLTIME));
     }
 
     @Test
@@ -632,7 +635,7 @@ class JobServiceImplTest {
         when(jobRepository.findAll()).thenReturn(List.of(job));
 
         List<JobType> result = jobService.getJobTypes();
-        assertEquals(0, result.size());
+        assertEquals(JobType.values().length, result.size());
     }
 
     @Test

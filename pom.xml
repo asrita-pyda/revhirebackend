@@ -62,11 +62,7 @@
             <version>6.2.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -112,6 +108,7 @@
     </dependencies>
 
     <build>
+        <finalName>revhire</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -168,4 +165,3 @@
     </build>
 
 </project>
-

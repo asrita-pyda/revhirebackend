@@ -1,6 +1,7 @@
 package org.example.revhire.service;
 
 import org.example.revhire.dto.request.LoginRequest;
+import org.example.revhire.dto.request.OtpLoginRequest;
 import org.example.revhire.dto.request.RegistrationRequest;
 import org.example.revhire.dto.response.AuthResponse;
 import org.example.revhire.dto.response.UserResponse;
@@ -12,6 +13,8 @@ public interface UserService {
     AuthResponse registerUser(RegistrationRequest registrationRequest);
 
     AuthResponse loginUser(LoginRequest loginRequest);
+
+    AuthResponse loginUserWithOtp(OtpLoginRequest loginRequest);
 
     UserResponse getUserProfile(Long userId);
 
@@ -29,6 +32,8 @@ public interface UserService {
 
     void updateEmail(Long userId, String newEmail);
 
+    void resetPassword(String email, String otpCode, String newPassword, String securityAnswer);
+
     List<UserResponse> getUsersByRole(Role role);
 
     List<UserResponse> searchUsers(String query);
@@ -44,4 +49,6 @@ public interface UserService {
     UserResponse getCurrentUserProfile(String email);
 
     UserResponse updateMyProfile(String email, UserResponse userResponse);
+
+    String getSecurityQuestion(String email);
 }

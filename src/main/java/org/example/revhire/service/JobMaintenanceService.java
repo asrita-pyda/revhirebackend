@@ -20,7 +20,6 @@ public class JobMaintenanceService {
         this.notificationService = notificationService;
     }
 
-
     @Scheduled(cron = "0 0 1 * * *")
     public void autoCloseExpiredJobs() {
         List<Job> expiredOpenJobs = jobRepository.findByStatusAndDeadlineBefore(JobStatus.OPEN, LocalDate.now());

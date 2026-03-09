@@ -1,6 +1,7 @@
 package org.example.revhire.service;
 
 import org.example.revhire.dto.request.LoginRequest;
+import org.example.revhire.dto.request.OtpLoginRequest;
 import org.example.revhire.dto.request.RegistrationRequest;
 import org.example.revhire.dto.response.AuthResponse;
 import org.example.revhire.dto.response.UserResponse;
@@ -25,13 +26,15 @@ public class UserServiceImpl implements UserService {
     private final org.example.revhire.mapper.UserMapper userMapper;
     private final org.example.revhire.config.JwtUtils jwtUtils;
     private final OtpService otpService;
+    private final NotificationService notificationService;
 
     public UserServiceImpl(UserRepository userRepository, EmployerRepository employerRepository,
                            JobSeekerRepository jobSeekerRepository,
                            org.springframework.security.crypto.password.PasswordEncoder passwordEncoder,
                            org.example.revhire.mapper.UserMapper userMapper,
                            org.example.revhire.config.JwtUtils jwtUtils,
-                           OtpService otpService) {
+                           OtpService otpService,
+                           NotificationService notificationService) {
         this.userRepository = userRepository;
         this.employerRepository = employerRepository;
         this.jobSeekerRepository = jobSeekerRepository;
@@ -39,12 +42,13 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
         this.jwtUtils = jwtUtils;
         this.otpService = otpService;
+        this.notificationService = notificationService;
     }
 
     @Override
     @Transactional
     public AuthResponse registerUser(RegistrationRequest req) {
-
+        // Verify OTP before doing anything else
         if (!otpService.verify(req.getEmail(), req.getOtpCode())) {
             throw new RuntimeException("Invalid or expired OTP");
         }
@@ -85,6 +89,11 @@ public class UserServiceImpl implements UserService {
 
         String token = jwtUtils.generateToken(savedUser.getEmail());
 
+        notificationService.createNotification(
+                savedUser.getId(),
+                "Welcome to RevHire, " + savedUser.getName() + ". Your account is ready.",
+                "WELCOME");
+
         return new AuthResponse(savedUser.getId(), savedUser.getName(), savedUser.getEmail(), savedUser.getRole(),
                 token);
     }
@@ -97,6 +106,26 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
+
+        String token = jwtUtils.generateToken(user.getEmail());
+        return new AuthResponse(user.getId(), user.getName(), user.getEmail(), user.getRole(), token);
+    }
+
+    @Override
+    public AuthResponse loginUserWithOtp(OtpLoginRequest loginRequest) {
+        String email = loginRequest.getEmail() == null ? "" : loginRequest.getEmail().trim();
+        String otpCode = loginRequest.getOtpCode() == null ? "" : loginRequest.getOtpCode().trim();
+
+        if (email.isBlank() || otpCode.isBlank()) {
+            throw new RuntimeException("Email and OTP are required");
+        }
+
+        if (!otpService.verify(email, otpCode)) {
+            throw new RuntimeException("Invalid or expired OTP");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         String token = jwtUtils.generateToken(user.getEmail());
         return new AuthResponse(user.getId(), user.getName(), user.getEmail(), user.getRole(), token);
@@ -123,16 +152,35 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         if (user.getRole() == Role.EMPLOYER) {
-            Employer employer = employerRepository.findById(userId).orElse(new Employer());
-            // Update employer fields
+            Employer employer = employerRepository.findByUserReferenceId(userId).orElseGet(() -> {
+                Employer created = new Employer();
+                created.setUser(user);
+                created.setUserId(user.getId());
+                return created;
+            });
             if (dto.getCompanyName() != null)
                 employer.setCompanyName(dto.getCompanyName());
-            // ... other fields
+            if (dto.getIndustry() != null)
+                employer.setIndustry(dto.getIndustry());
+            if (dto.getCompanySize() != null)
+                employer.setCompanySize(dto.getCompanySize());
+            if (dto.getDescription() != null)
+                employer.setDescription(dto.getDescription());
+            if (dto.getWebsite() != null)
+                employer.setWebsite(dto.getWebsite());
+            if (dto.getLocation() != null)
+                employer.setLocation(dto.getLocation());
             employerRepository.save(employer);
         } else if (user.getRole() == Role.JOB_SEEKER) {
-            JobSeeker jobSeeker = jobSeekerRepository.findById(userId).orElse(new JobSeeker());
+            JobSeeker jobSeeker = jobSeekerRepository.findById(userId).orElseGet(() -> {
+                JobSeeker created = new JobSeeker();
+                created.setUser(user);
+                return created;
+            });
             if (dto.getCurrentStatus() != null)
                 jobSeeker.setCurrentStatus(dto.getCurrentStatus());
+            if (dto.getTotalExperience() != null)
+                jobSeeker.setTotalExperience(dto.getTotalExperience());
             jobSeekerRepository.save(jobSeeker);
         }
 
@@ -249,16 +297,51 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public String getSecurityQuestion(String email) {
+        if (email == null || email.isBlank()) {
+            return null;
+        }
+        return userRepository.findByEmail(email)
+                .map(User::getSecurityQuestion)
+                .filter(q -> q != null && !q.isBlank())
+                .orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(String email, String otpCode, String newPassword, String securityAnswer) {
+        if (!otpService.verify(email, otpCode)) {
+            throw new RuntimeException("Invalid or expired OTP");
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getSecurityQuestion() != null && !user.getSecurityQuestion().isBlank()
+                && user.getSecurityAnswer() != null && !user.getSecurityAnswer().isBlank()) {
+            if (securityAnswer == null || securityAnswer.isBlank()) {
+                throw new RuntimeException("Security answer required");
+            }
+            if (!user.getSecurityAnswer().trim().equalsIgnoreCase(securityAnswer.trim())) {
+                throw new RuntimeException("Incorrect security answer");
+            }
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
     private UserResponse mapToDto(User user) {
         UserResponse dto = userMapper.toDto(user);
 
         if (user.getRole() == Role.EMPLOYER) {
-            employerRepository.findById(user.getId()).ifPresent(emp -> {
+            employerRepository.findByUserReferenceId(user.getId()).ifPresent(emp -> {
                 dto.setCompanyName(emp.getCompanyName());
                 dto.setIndustry(emp.getIndustry());
                 dto.setCompanySize(emp.getCompanySize());
                 dto.setDescription(emp.getDescription());
                 dto.setWebsite(emp.getWebsite());
+                if (emp.getLocation() != null && !emp.getLocation().isBlank()) {
+                    dto.setLocation(emp.getLocation());
+                }
             });
         } else if (user.getRole() == Role.JOB_SEEKER) {
             jobSeekerRepository.findById(user.getId()).ifPresent(seeker -> {
