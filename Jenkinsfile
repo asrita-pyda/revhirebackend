@@ -80,25 +80,10 @@ pipeline{
                                     removePrefix: "target/",
                                     remoteDirectory:"${REMOTE_DIR}",
                                     flatten: true,
-                                    execCommand: """
-                                        cd /home/ec2-user
+                                    execCommand:"""
+                                        pkill -f "java -jar" || true
 
-                                        echo "Stopping old application"
-                                        PID=$(ps -ef | grep "java -jar.*${JAR_NAME}" | grep -v grep | awk '{print $2}')
-                                        if [ ! -z "$PID" ]; then kill -9 $PID; fi
-
-                                        echo "Starting new application"
-                                        setsid nohup java -jar ${JAR_NAME} --spring.profiles.active=aws > application.log 2>&1 < /dev/null &
-
-                                        echo "Waiting for application to start..."
-                                        sleep 15
-
-                                        echo "Checking health endpoint"
-                                        curl -f http://localhost:${APP_PORT}/actuator/health
-
-                                        echo "Deployment successful"
-
-                                        exit 0
+                                        nohup java -jar *.jar > application.log 2>&1&
                                     """
                                 )
                             ]
