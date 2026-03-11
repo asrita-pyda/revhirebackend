@@ -82,9 +82,9 @@ pipeline{
                                     flatten: true,
                                     execCommand:"""
                                         pkill -f "java -jar" || true
-
-                                        nohup java -jar *.jar > application.log 2>&1 &
-                                        sleep 2
+                                        sleep 1
+                                        nohup java -jar /home/ec2-user/revhire.jar > /home/ec2-user/application.log 2>&1 &
+                                        exit 0
                                     """
                                 )
                             ]
